@@ -4,126 +4,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universal Auto Diagnostics</title>
+<title>AutoDiagPro</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#101820;color:#fff;font-family:Arial,sans-serif}
-header{background:#087e8b;padding:22px;text-align:center}
-header h1{font-size:22px;margin:0}
-header p{margin:7px 0 0}
-main{padding:15px;max-width:700px;margin:auto}
-.card{background:#1c2935;border:1px solid #34495e;border-radius:12px;padding:16px;margin:13px 0}
-h2{color:#25c6da;font-size:19px}
-input,select,button{width:100%;padding:13px;margin:7px 0;border-radius:7px;border:0;font-size:15px}
-input,select{background:#fff;color:#111}
-button{background:#087e8b;color:#fff;font-weight:bold}
+body{margin:0;background:#081521;color:#edf7fa;font-family:Arial,sans-serif}
+header{background:#102c3c;padding:22px;border-bottom:3px solid #00d9b5}
+header h1{color:#00e0bd;margin:0;font-size:28px}
+header p{color:#bdd0d9;font-size:12px}
+main{max-width:850px;margin:auto;padding:15px}
+.panel{background:#122a3a;border:1px solid #315064;border-radius:12px;padding:17px;margin:15px 0}
+h2{color:#00e0bd;font-size:19px;margin-top:0}
+label{display:block;margin:12px 0 6px;color:#bed2dc;font-size:13px}
+input,select{width:100%;padding:13px;border:1px solid #426276;border-radius:7px;background:#071b28;color:white;font-size:15px}
+button{background:#00c6aa;color:#041b20;padding:13px 17px;border:0;border-radius:7px;font-weight:bold;margin-top:12px;cursor:pointer}
 button:active{opacity:.7}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.module{background:#263b4b;padding:16px 8px;border-radius:9px;text-align:center}
-.module span{display:block;font-size:25px;margin-bottom:8px}
-.result{background:#101820;padding:12px;border-radius:7px;white-space:pre-wrap}
-small{color:#b9c8d3}
-footer{text-align:center;color:#aaa;padding:25px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.module{background:#1b3a4c;padding:16px;border-radius:9px;text-align:center}
+.module b{display:block;color:#00e0bd;margin-bottom:7px}
+.result{background:#071b28;padding:14px;border-left:4px solid #00d9b5;margin-top:14px;border-radius:5px;line-height:1.6}
+.small{font-size:12px;color:#9fb7c5}
+footer{text-align:center;padding:25px;color:#8ca4b2;font-size:12px}
+@media(max-width:430px){header h1{font-size:23px}}
 </style>
 </head>
 <body>
 <header>
-<h1>UNIVERSAL AUTO DIAGNOSTICS</h1>
-<p>Professional Vehicle Diagnostic Platform</p>
+<h1>AutoDiagPro</h1>
+<p>UNIVERSAL AUTOMOTIVE DIAGNOSTICS PLATFORM</p>
 </header>
 <main>
-<div class="card">
-<h2>Vehicle Information</h2>
-<input id="make" placeholder="Vehicle make e.g. Toyota">
-<input id="model" placeholder="Model e.g. Hilux">
-<input id="year" placeholder="Year e.g. 2018" type="number">
-<input id="engine" placeholder="Engine e.g. 2.8 Diesel">
-<button onclick="saveVehicle()">SAVE VEHICLE</button>
+
+<section class="panel">
+<h2>🚗 Vehicle Identification</h2>
+<label>Manufacturer</label>
+<select id="make">
+<option value="">Select manufacturer</option>
+<option>Toyota</option>
+<option>Volkswagen</option>
+<option>BMW</option>
+<option>Mercedes-Benz</option>
+<option>Ford</option>
+<option>Opel</option>
+<option>Hyundai</option>
+<option>Kia</option>
+<option>Nissan</option>
+<option>Renault</option>
+<option>Isuzu</option>
+<option>Mahindra</option>
+<option>Other</option>
+</select>
+<label>Model</label>
+<input id="model" placeholder="Enter vehicle model">
+<label>Year</label>
+<input id="year" type="number" placeholder="e.g. 2018">
+<label>Engine</label>
+<input id="engine" placeholder="e.g. 2.0 Diesel">
+<button onclick="saveVehicle()">Save Vehicle</button>
 <div id="vehicleResult" class="result">No vehicle selected.</div>
-</div>
+</section>
 
-<div class="card">
-<h2>Diagnostic Modules</h2>
+<section class="panel">
+<h2>🔍 OBD2 Fault Code Lookup</h2>
+<label>Enter diagnostic fault code</label>
+<input id="code" placeholder="Example: P0300">
+<button onclick="lookup()">Search Fault Code</button>
+<div id="faultResult"></div>
+</section>
+
+<section class="panel">
+<h2>⚙️ Diagnostic Modules</h2>
 <div class="grid">
-<div class="module"><span>⚙️</span>Engine ECU</div>
-<div class="module"><span>🛑</span>ABS System</div>
-<div class="module"><span>🛡️</span>Airbag / SRS</div>
-<div class="module"><span>🔌</span>Body Control</div>
-<div class="module"><span>🔄</span>Transmission</div>
-<div class="module"><span>🔋</span>Battery System</div>
+<div class="module"><b>ECU / ECM</b>Engine control</div>
+<div class="module"><b>ABS</b>Brake system</div>
+<div class="module"><b>SRS</b>Airbag system</div>
+<div class="module"><b>TCM</b>Gearbox control</div>
+<div class="module"><b>BCM</b>Body control</div>
+<div class="module"><b>EPS</b>Power steering</div>
+<div class="module"><b>IMMOBILISER</b>Vehicle security</div>
+<div class="module"><b>INSTRUMENT</b>Dashboard</div>
 </div>
-</div>
+<p class="small">Module reference sections. Live communication requires compatible diagnostic hardware and vehicle-specific support.</p>
+</section>
 
-<div class="card">
-<h2>Fault Code Lookup</h2>
-<input id="code" placeholder="Enter code e.g. P0300" style="text-transform:uppercase">
-<button onclick="lookupCode()">LOOK UP FAULT CODE</button>
-<div id="codeResult" class="result">Enter a fault code to begin.</div>
-</div>
+<section class="panel">
+<h2>🛠️ Fault Finding Assistant</h2>
+<label>Describe the vehicle problem</label>
+<input id="symptom" placeholder="e.g. Engine cranks but won't start">
+<button onclick="investigate()">Investigate Problem</button>
+<div id="advice"></div>
+</section>
 
-<div class="card">
-<h2>OBD-II Connection</h2>
-<p>Connect a compatible OBD-II adapter to your vehicle.</p>
-<button onclick="connectOBD()">CONNECT OBD ADAPTER</button>
-<div id="connection" class="result">Not connected. This demo does not communicate with a vehicle yet.</div>
-<small>Real vehicle communication requires compatible hardware, supported protocols and device permissions.</small>
+<section class="panel">
+<h2>📊 Live Data Monitor</h2>
+<div class="grid">
+<div class="module"><b>Engine RPM</b>Not connected</div>
+<div class="module"><b>Coolant</b>Not connected</div>
+<div class="module"><b>Battery</b>Not connected</div>
+<div class="module"><b>Throttle</b>Not connected</div>
 </div>
+<p class="small">Live readings require a compatible OBD2 adapter and vehicle connection.</p>
+</section>
 
-<div class="card">
-<h2>Live Diagnostic Data</h2>
-<button onclick="showData()">OPEN LIVE DATA</button>
-<div id="live" class="result">No live vehicle data available.</div>
-</div>
-
-<div class="card">
+<section class="panel">
 <h2>System Information</h2>
-<p>Version 1.0 — Development Foundation</p>
-<p>Platform: Android / PC / Web</p>
-<p>Vehicle communication: Under development</p>
-</div>
+<p>Platform: AutoDiagPro</p>
+<p>Version: 2.0</p>
+<p>Fault database: Starter edition</p>
+<p>Connection: Not connected</p>
+</section>
+
 </main>
-<footer>Universal Auto Diagnostics © 2026</footer>
+<footer>AutoDiagPro © 2026 | Universal Automotive Diagnostics</footer>
+
 <script>
-const faults={
-"P0100":"Mass or Volume Air Flow Circuit Malfunction.",
-"P0110":"Intake Air Temperature Sensor Circuit.",
-"P0120":"Throttle/Pedal Position Sensor Circuit.",
-"P0171":"System Too Lean Bank 1.",
-"P0172":"System Too Rich Bank 1.",
-"P0201":"Injector Circuit Cylinder 1.",
-"P0300":"Random/Multiple Cylinder Misfire Detected.",
-"P0301":"Cylinder 1 Misfire Detected.",
-"P0302":"Cylinder 2 Misfire Detected.",
-"P0303":"Cylinder 3 Misfire Detected.",
-"P0304":"Cylinder 4 Misfire Detected.",
-"P0325":"Knock Sensor Circuit Malfunction.",
-"P0335":"Crankshaft Position Sensor Circuit.",
-"P0340":"Camshaft Position Sensor Circuit.",
-"P0401":"Exhaust Gas Recirculation Insufficient Flow.",
-"P0420":"Catalyst System Efficiency Below Threshold Bank 1.",
-"P0500":"Vehicle Speed Sensor Malfunction.",
-"P0562":"System Voltage Low.",
-"P0700":"Transmission Control System Malfunction.",
-"P0115":"Engine Coolant Temperature Sensor Circuit."
+const database={
+P0100:["Mass Air Flow Circuit Malfunction","MAF sensor, wiring or connector fault.","Inspect wiring, power supply and sensor signal."],
+P0115:["Coolant Temperature Sensor Circuit","Temperature sensor or wiring fault.","Check sensor resistance and wiring."],
+P0120:["Throttle Position Sensor Circuit","Throttle sensor or throttle body fault.","Check reference voltage, ground and signal."],
+P0171:["System Too Lean Bank 1","Vacuum leak, fuel pressure or MAF fault.","Check intake leaks, fuel pressure and fuel trims."],
+P0172:["System Too Rich Bank 1","Leaking injector, MAF or fuel pressure issue.","Check fuel pressure and injector leakage."],
+P0201:["Injector Circuit Cylinder 1","Injector, wiring or ECU driver fault.","Check injector resistance and control pulse."],
+P0230:["Fuel Pump Primary Circuit","Fuel pump relay, fuse or wiring fault.","Check fuse, relay, power and ground."],
+P0300:["Random Multiple Cylinder Misfire","Ignition, fuel, compression or air supply problem.","Check plugs, coils, injectors and compression."],
+P0301:["Cylinder 1 Misfire","Spark plug, coil, injector or compression issue.","Inspect cylinder 1 ignition and fuel delivery."],
+P0302:["Cylinder 2 Misfire","Spark plug, coil, injector or compression issue.","Inspect cylinder 2 ignition and fuel delivery."],
+P0303:["Cylinder 3 Misfire","Spark plug, coil, injector or compression issue.","Inspect cylinder 3 ignition and fuel delivery."],
+P0304:["Cylinder 4 Misfire","Spark plug, coil, injector or compression issue.","Inspect cylinder 4 ignition and fuel delivery."],
+P0335:["Crankshaft Position Sensor Circuit","Crank sensor, wiring or reluctor wheel fault.","Check sensor supply, signal and wiring."],
+P0340:["Camshaft Position Sensor Circuit","Cam sensor, wiring or timing fault.","Check sensor signal and mechanical timing."],
+P0401:["EGR Flow Insufficient","Blocked EGR passage or faulty EGR valve.","Inspect EGR valve and passages."],
+P0420:["Catalyst Efficiency Below Threshold Bank 1","Catalytic converter, exhaust leak or oxygen sensor.","Check exhaust leaks and oxygen sensor activity."],
+P0500:["Vehicle Speed Sensor Malfunction","Speed sensor or wiring fault.","Check sensor signal and connections."],
+P0562:["System Voltage Low","Battery, alternator or electrical connection problem.","Test battery, charging voltage and voltage drop."],
+P0606:["ECM Processor Fault","Possible ECU internal or power supply fault.","Check ECU power, ground and communication before condemning ECU."],
+P0700:["Transmission Control System Request","Transmission controller has requested an engine warning.","Read transmission module codes for further diagnosis."]
 };
+
 function saveVehicle(){
-let v=["make","model","year","engine"].map(x=>document.getElementById(x).value.trim());
-if(!v[0]||!v[1]){alert("Enter at least the vehicle make and model.");return;}
-document.getElementById("vehicleResult").textContent=
-"Selected Vehicle: "+v.filter(Boolean).join(" | ");
+const make=document.getElementById("make").value;
+const model=document.getElementById("model").value.trim();
+const year=document.getElementById("year").value;
+const engine=document.getElementById("engine").value.trim();
+
+if(!make||!model||!year){
+alert("Please enter manufacturer, model and year.");
+return;
 }
-function lookupCode(){
-let c=document.getElementById("code").value.trim().toUpperCase();
-document.getElementById("codeResult").textContent=
-faults[c]?"Code: "+c+"\nDescription: "+faults[c]+"\nNote: Confirm using manufacturer-specific diagnostic information.":"Code not in the starter database. Check the code and manufacturer-specific information.";
+document.getElementById("vehicleResult").innerHTML=
+"<b>Vehicle saved</b><br>"+make+" "+model+" "+year+
+"<br>Engine: "+(engine||"Not specified");
 }
-function connectOBD(){
-document.getElementById("connection").textContent=
-"Hardware connection is not implemented yet. A compatible OBD adapter and communication software are required.";
+
+function lookup(){
+const code=document.getElementById("code").value.trim().toUpperCase();
+const result=document.getElementById("faultResult");
+
+if(!code){
+result.textContent="Please enter a fault code.";
+return;
 }
-function showData(){
-document.getElementById("live").textContent=
-"Live data is not available until a supported vehicle adapter is connected.";
+const item=database[code];
+
+if(item){
+result.innerHTML="<div class='result'><b>"+code+" - "+item[0]+
+"</b><br><br><b>Possible causes:</b><br>"+item[1]+
+"<br><br><b>Recommended checks:</b><br>"+item[2]+
+"<br><br><span class='small'>Generic OBD2 guidance. Confirm with manufacturer service information.</span></div>";
+}else{
+result.innerHTML="<div class='result'>This code is not yet in our starter database. More codes will be added in future versions.</div>";
+}
+}
+
+function investigate(){
+const problem=document.getElementById("symptom").value.trim();
+const result=document.getElementById("advice");
+
+if(!problem){
+result.textContent="Please describe the vehicle problem.";
+return;
+}
+
+const p=problem.toLowerCase();
+let advice="Start with a visual inspection, battery condition, fuses, wiring and stored diagnostic trouble codes. Follow the manufacturer's testing procedure.";
+
+if(p.includes("crank")||p.includes("start")){
+advice="Check battery voltage during cranking, starter speed, ECU power and grounds, immobiliser status, crankshaft sensor signal, fuel pressure and injector command.";
+}else if(p.includes("overheat")||p.includes("hot")){
+advice="Check coolant level when safe, leaks, cooling fan operation, thermostat, radiator flow, water pump and coolant temperature sensor.";
+}else if(p.includes("misfire")||p.includes("rough")){
+advice="Check fault codes, spark plugs, ignition coils, injector operation, intake leaks and cylinder compression.";
+}else if(p.includes("battery")||p.includes("charge")){
+advice="Test battery condition, alternator charging voltage, belt condition, terminals, grounds and voltage drop under load.";
+}else if(p.includes("gear")||p.includes("transmission")){
+advice="Check transmission fault codes, fluid condition where applicable, power supply, grounds, wiring and speed sensor signals.";
+}else if(p.includes("abs")||p.includes("brake")){
+advice="Check ABS module codes, wheel speed sensor signals, wiring, connectors, reluctor rings and wheel bearing condition.";
+}
+
+result.innerHTML="<div class='result'><b>Suggested diagnostic checks</b><br>"+advice+
+"<br><br><span class='small'>These are starting points, not a confirmed diagnosis. Use vehicle-specific specifications and safe testing procedures.</span></div>";
 }
 </script>
 </body>
