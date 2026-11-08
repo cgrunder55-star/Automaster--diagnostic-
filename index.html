@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Auto Diagnostics</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101820;color:#fff;font-family:Arial,sans-serif}
+header{background:#087e8b;padding:22px;text-align:center}
+header h1{font-size:22px;margin:0}
+header p{margin:7px 0 0}
+main{padding:15px;max-width:700px;margin:auto}
+.card{background:#1c2935;border:1px solid #34495e;border-radius:12px;padding:16px;margin:13px 0}
+h2{color:#25c6da;font-size:19px}
+input,select,button{width:100%;padding:13px;margin:7px 0;border-radius:7px;border:0;font-size:15px}
+input,select{background:#fff;color:#111}
+button{background:#087e8b;color:#fff;font-weight:bold}
+button:active{opacity:.7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.module{background:#263b4b;padding:16px 8px;border-radius:9px;text-align:center}
+.module span{display:block;font-size:25px;margin-bottom:8px}
+.result{background:#101820;padding:12px;border-radius:7px;white-space:pre-wrap}
+small{color:#b9c8d3}
+footer{text-align:center;color:#aaa;padding:25px}
+</style>
+</head>
+<body>
+<header>
+<h1>UNIVERSAL AUTO DIAGNOSTICS</h1>
+<p>Professional Vehicle Diagnostic Platform</p>
+</header>
+<main>
+<div class="card">
+<h2>Vehicle Information</h2>
+<input id="make" placeholder="Vehicle make e.g. Toyota">
+<input id="model" placeholder="Model e.g. Hilux">
+<input id="year" placeholder="Year e.g. 2018" type="number">
+<input id="engine" placeholder="Engine e.g. 2.8 Diesel">
+<button onclick="saveVehicle()">SAVE VEHICLE</button>
+<div id="vehicleResult" class="result">No vehicle selected.</div>
+</div>
+
+<div class="card">
+<h2>Diagnostic Modules</h2>
+<div class="grid">
+<div class="module"><span>⚙️</span>Engine ECU</div>
+<div class="module"><span>🛑</span>ABS System</div>
+<div class="module"><span>🛡️</span>Airbag / SRS</div>
+<div class="module"><span>🔌</span>Body Control</div>
+<div class="module"><span>🔄</span>Transmission</div>
+<div class="module"><span>🔋</span>Battery System</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Fault Code Lookup</h2>
+<input id="code" placeholder="Enter code e.g. P0300" style="text-transform:uppercase">
+<button onclick="lookupCode()">LOOK UP FAULT CODE</button>
+<div id="codeResult" class="result">Enter a fault code to begin.</div>
+</div>
+
+<div class="card">
+<h2>OBD-II Connection</h2>
+<p>Connect a compatible OBD-II adapter to your vehicle.</p>
+<button onclick="connectOBD()">CONNECT OBD ADAPTER</button>
+<div id="connection" class="result">Not connected. This demo does not communicate with a vehicle yet.</div>
+<small>Real vehicle communication requires compatible hardware, supported protocols and device permissions.</small>
+</div>
+
+<div class="card">
+<h2>Live Diagnostic Data</h2>
+<button onclick="showData()">OPEN LIVE DATA</button>
+<div id="live" class="result">No live vehicle data available.</div>
+</div>
+
+<div class="card">
+<h2>System Information</h2>
+<p>Version 1.0 — Development Foundation</p>
+<p>Platform: Android / PC / Web</p>
+<p>Vehicle communication: Under development</p>
+</div>
+</main>
+<footer>Universal Auto Diagnostics © 2026</footer>
+<script>
+const faults={
+"P0100":"Mass or Volume Air Flow Circuit Malfunction.",
+"P0110":"Intake Air Temperature Sensor Circuit.",
+"P0120":"Throttle/Pedal Position Sensor Circuit.",
+"P0171":"System Too Lean Bank 1.",
+"P0172":"System Too Rich Bank 1.",
+"P0201":"Injector Circuit Cylinder 1.",
+"P0300":"Random/Multiple Cylinder Misfire Detected.",
+"P0301":"Cylinder 1 Misfire Detected.",
+"P0302":"Cylinder 2 Misfire Detected.",
+"P0303":"Cylinder 3 Misfire Detected.",
+"P0304":"Cylinder 4 Misfire Detected.",
+"P0325":"Knock Sensor Circuit Malfunction.",
+"P0335":"Crankshaft Position Sensor Circuit.",
+"P0340":"Camshaft Position Sensor Circuit.",
+"P0401":"Exhaust Gas Recirculation Insufficient Flow.",
+"P0420":"Catalyst System Efficiency Below Threshold Bank 1.",
+"P0500":"Vehicle Speed Sensor Malfunction.",
+"P0562":"System Voltage Low.",
+"P0700":"Transmission Control System Malfunction.",
+"P0115":"Engine Coolant Temperature Sensor Circuit."
+};
+function saveVehicle(){
+let v=["make","model","year","engine"].map(x=>document.getElementById(x).value.trim());
+if(!v[0]||!v[1]){alert("Enter at least the vehicle make and model.");return;}
+document.getElementById("vehicleResult").textContent=
+"Selected Vehicle: "+v.filter(Boolean).join(" | ");
+}
+function lookupCode(){
+let c=document.getElementById("code").value.trim().toUpperCase();
+document.getElementById("codeResult").textContent=
+faults[c]?"Code: "+c+"\nDescription: "+faults[c]+"\nNote: Confirm using manufacturer-specific diagnostic information.":"Code not in the starter database. Check the code and manufacturer-specific information.";
+}
+function connectOBD(){
+document.getElementById("connection").textContent=
+"Hardware connection is not implemented yet. A compatible OBD adapter and communication software are required.";
+}
+function showData(){
+document.getElementById("live").textContent=
+"Live data is not available until a supported vehicle adapter is connected.";
+}
+</script>
+</body>
+</html>
