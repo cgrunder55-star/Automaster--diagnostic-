@@ -211,5 +211,64 @@ result.innerText=
   specifications using the exact ECU variant before testing.
   Do not replace parts based on the fault code alone.</p>
 </section>
+HTML
+
+<section id="toyota-diagnostics">
+  <h2>Toyota Vehicle Diagnostics</h2>
+
+  <label>Model</label>
+  <select id="toyotaModel">
+    <option value="Corolla">Corolla</option>
+  </select>
+
+  <label>Engine</label>
+  <select id="toyotaEngine">
+    <option value="1.6">1.6 Petrol</option>
+    <option value="1.8">1.8 Petrol</option>
+    <option value="2.0">2.0 Petrol</option>
+  </select>
+
+  <label>Transmission</label>
+  <select id="toyotaTransmission">
+    <option value="Manual">Manual</option>
+    <option value="Automatic">Automatic</option>
+  </select>
+
+  <button onclick="checkToyota()">Identify Toyota</button>
+
+  <div id="toyotaResult"></div>
+</section>
+
+<script>
+function checkToyota() {
+  const model = document.getElementById("toyotaModel").value;
+  const engine = document.getElementById("toyotaEngine").value;
+  const transmission =
+    document.getElementById("toyotaTransmission").value;
+
+  let result = `
+    <h3>Toyota ${model}</h3>
+    <p>Engine: ${engine} Petrol</p>
+    <p>Transmission: ${transmission}</p>
+  `;
+
+  if (transmission === "Manual") {
+    result += `
+      <p>Transmission control:
+      Manual gearbox. No separate automatic
+      transmission control module assumed.</p>
+    `;
+  } else {
+    result += `
+      <p>Transmission control:
+      Automatic transmission. Check the
+      vehicle-specific transmission control
+      system and wiring diagram.</p>
+    `;
+  }
+
+  document.getElementById("toyotaResult").innerHTML = result;
+}
+</script>
 </body>
 </html>
