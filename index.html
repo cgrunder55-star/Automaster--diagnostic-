@@ -1,289 +1,187 @@
-<!-- AutoDiagPro Version 0.1 --> buck up files
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoDiagPro</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>AutoDiagPro — Worldwide Vehicle Diagnostics</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#101820;color:white}
-header{background:#172735;padding:22px;text-align:center;border-bottom:3px solid #00bcd4}
-header h1{margin:0;color:#00e5ff}
-header p{color:#b0bec5}
-.container{max-width:850px;margin:auto;padding:18px}
-.card{background:#1d2b38;padding:18px;margin-bottom:18px;border-radius:12px;border:1px solid #34495e}
-h2{color:#00e5ff;font-size:19px}
-input,select,button{width:100%;padding:13px;margin-top:10px;border-radius:7px;border:none;font-size:15px}
-input,select{background:#f1f5f9;color:#111}
-button{background:#00bcd4;color:#07151d;font-weight:bold;cursor:pointer}
-.systems{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.system{background:#263b4c;padding:16px;border-radius:8px;text-align:center;border:1px solid #40576b}
-#results{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
-.status{color:#ffc107;font-weight:bold}
-footer{text-align:center;padding:20px;color:#90a4ae;font-size:12px}
+:root{--bg:#0b1220;--panel:#131f32;--panel2:#192840;--line:#2b3d57;--text:#edf4ff;--muted:#a8b8ce;--accent:#35c5a0;--warn:#f3bd59;--danger:#ff7b7b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1220,#101b2d);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{padding:24px max(18px,calc((100vw - 1100px)/2));border-bottom:1px solid var(--line);background:#0e1929}
+.brand{display:flex;align-items:center;gap:12px}.mark{width:44px;height:44px;border-radius:12px;background:var(--accent);color:#08251e;display:grid;place-items:center;font-size:24px;font-weight:900}
+h1{font-size:23px;margin:0}header p{margin:3px 0 0;color:var(--muted)}
+main{max-width:1100px;margin:24px auto;padding:0 16px 48px}.notice{border:1px solid #80652f;background:#302817;color:#ffe7b2;padding:13px 15px;border-radius:12px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px;min-width:0}
+.card h2{font-size:17px;margin:0 0 14px}.wide{grid-column:1/-1}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}select,input{width:100%;padding:12px;border-radius:9px;border:1px solid var(--line);background:#0d1828;color:var(--text);font:inherit}
+button{background:var(--accent);border:0;border-radius:10px;padding:12px 18px;font-weight:800;color:#06251e;cursor:pointer;margin-top:12px}button.secondary{background:#243750;color:var(--text);border:1px solid var(--line)}
+.result{margin-top:14px;background:#0d1828;border:1px solid var(--line);border-radius:12px;padding:15px;min-height:80px}
+.result h3{margin:0 0 8px}.tag{display:inline-block;background:#183b39;color:#8ff0d6;padding:3px 8px;border-radius:20px;font-size:12px;margin:2px 4px 2px 0}
+.muted{color:var(--muted)}.result ul{padding-left:20px}.result li{margin:5px 0}.small{font-size:12px;color:var(--muted)}
+.status{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.status span{border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--muted);font-size:12px}
+footer{max-width:1100px;margin:auto;padding:0 16px 30px;color:var(--muted);font-size:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.fields{grid-template-columns:1fr}h1{font-size:20px}}
 </style>
 </head>
 <body>
-
-<header>
-<h1>AutoDiagPro</h1>
-<p>Universal Vehicle Diagnostic System</p>
-<p class="status">SOFTWARE DEMONSTRATION MODE</p>
-</header>
-
-<div class="container">
-
-<div class="card">
-<h2>Vehicle Identification</h2>
-<input id="make" placeholder="Vehicle Make">
-<input id="model" placeholder="Vehicle Model">
-<input id="year" type="number" placeholder="Vehicle Year">
-<button onclick="identifyVehicle()">SAVE VEHICLE</button>
-<p id="vehicleResult"></p>
+<header><div class="brand"><div class="mark">A</div><div><h1>AutoDiagPro</h1><p>Worldwide vehicle diagnostics · Foundation release 0.2</p></div></div></header>
+<main>
+<div class="notice"><strong>Coverage notice:</strong> This is the expandable application foundation. Vehicle lists and sample diagnostic records are not a complete factory database. Confirm all repairs using vehicle-specific service information and proper tests.</div>
+<div class="grid">
+<section class="card">
+<h2>1. Identify vehicle</h2>
+<div class="fields">
+<div><label for="region">Manufacturer region</label><select id="region"><option value="All">All regions</option><option>Asia</option><option>China</option><option>Europe</option><option>North America</option><option>Korea</option><option>India</option><option>Other</option></select></div>
+<div><label for="make">Manufacturer</label><select id="make"></select></div>
+<div><label for="model">Model</label><select id="model"></select></div>
+<div><label for="year">Model year</label><input id="year" type="number" min="1960" max="2035" placeholder="e.g. 2018"></div>
+<div id="genericEngineWrap"><label for="engine">Engine / powertrain</label><input id="engine" placeholder="e.g. 2.0 diesel / engine code"></div>
+<div id="toyotaEngineWrap" hidden><label for="toyotaEngine">Toyota Corolla petrol engine</label><select id="toyotaEngine"><option value="1.6 Petrol">1.6 Petrol</option><option value="1.8 Petrol">1.8 Petrol</option><option value="2.0 Petrol">2.0 Petrol</option></select></div>
+<div><label for="fuel">Fuel / power type</label><select id="fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option><option>LPG / CNG</option><option>Other / unknown</option></select></div>
+<div><label for="transmission">Transmission</label><select id="transmission"><option>Manual</option><option>Automatic</option><option>CVT</option><option>DCT / DSG</option><option>Single-speed EV</option><option>Unknown</option></select></div>
+<div><label for="market">Market / country</label><input id="market" placeholder="e.g. South Africa"></div>
 </div>
-
-<div class="card">
-<h2>Vehicle Systems</h2>
-<div class="systems">
-<div class="system">Engine ECU</div>
-<div class="system">ABS Brakes</div>
-<div class="system">Airbag / SRS</div>
-<div class="system">Gearbox / TCM</div>
-<div class="system">Body Control / BCM</div>
-<div class="system">Immobiliser</div>
-<div class="system">Charging System</div>
-<div class="system">Electrical System</div>
-</div>
-</div>
-
-<div class="card">
-<h2>Fault Code Diagnosis</h2>
-<input id="faultCode" placeholder="Enter code e.g. P0335">
-<button onclick="diagnose()">DIAGNOSE FAULT</button>
-<div id="results">Diagnostic results will appear here.</div>
-</div>
-
-<div class="card">
-<h2>Diagnostic Connection</h2>
-<p id="connection">No diagnostic hardware connected.</p>
-<p>OBD-II hardware connection is not yet implemented.</p>
-</div>
-
-</div>
-
-<footer>
-AutoDiagPro | Universal Vehicle Diagnostics<br>
-Version 1.0
-</footer>
-
-<script>
-
-const faultDatabase = {
-"P0100":{
-description:"Mass Air Flow Sensor Circuit Malfunction",
-causes:["Faulty MAF sensor","Damaged wiring","Loose connector"],
-tests:["Inspect wiring","Check power and ground","Check live MAF readings"]
-},
-"P0101":{
-description:"Mass Air Flow Sensor Range/Performance",
-causes:["Dirty MAF sensor","Air intake leak","Blocked air filter"],
-tests:["Inspect air filter","Check intake pipes","Check live readings"]
-},
-"P0110":{
-description:"Intake Air Temperature Sensor Circuit",
-causes:["Faulty IAT sensor","Open circuit","Damaged connector"],
-tests:["Inspect wiring","Check sensor resistance","Check live temperature"]
-},
-"P0120":{
-description:"Throttle Position Sensor Circuit",
-causes:["Faulty throttle sensor","Wiring damage","Poor ground"],
-tests:["Check wiring","Check power and ground","Monitor throttle readings"]
-},
-"P0171":{
-description:"System Too Lean Bank 1",
-causes:["Vacuum leak","Low fuel pressure","Dirty injectors"],
-tests:["Check fuel pressure","Perform smoke test","Check fuel trims"]
-},
-"P0201":{
-description:"Injector Circuit Cylinder 1",
-causes:["Faulty injector","Damaged wiring","ECU driver fault"],
-tests:["Check injector resistance","Inspect connector","Check injector pulse"]
-},
-"P0300":{
-description:"Random Multiple Cylinder Misfire",
-causes:["Ignition fault","Fuel delivery problem","Low compression"],
-tests:["Check misfire counters","Inspect spark plugs","Check fuel pressure"]
-},
-"P0335":{
-description:"Crankshaft Position Sensor Circuit",
-causes:["Faulty crank sensor","Damaged wiring","Trigger wheel damage"],
-tests:["Inspect wiring","Check sensor supply","Check signal with oscilloscope"]
-},
-"P0340":{
-description:"Camshaft Position Sensor Circuit",
-causes:["Faulty cam sensor","Damaged wiring","Poor connector contact"],
-tests:["Check wiring","Check power and ground","Inspect sensor signal"]
-},
-"P0420":{
-description:"Catalyst Efficiency Below Threshold Bank 1",
-causes:["Worn catalytic converter","Exhaust leak","Faulty oxygen sensor"],
-tests:["Check exhaust leaks","Inspect oxygen sensor readings","Check fuel trims"]
-},
-"P0500":{
-description:"Vehicle Speed Sensor Malfunction",
-causes:["Faulty speed sensor","Damaged wiring","ABS signal problem"],
-tests:["Inspect wiring","Check live speed data","Inspect ABS signals"]
-},
-"P0562":{
-description:"System Voltage Low",
-causes:["Weak battery","Alternator fault","Poor battery connections"],
-tests:["Test battery voltage","Test charging voltage","Inspect battery cables"]
-}
-};
-
-function identifyVehicle(){
-const make=document.getElementById("make").value.trim();
-const model=document.getElementById("model").value.trim();
-const year=document.getElementById("year").value.trim();
-
-if(!make||!model||!year){
-alert("Please enter make, model and year.");
-return;
-}
-
-document.getElementById("vehicleResult").innerText=
-"Vehicle saved: "+make+" "+model+" "+year;
-}
-
-function diagnose(){
-const code=document.getElementById("faultCode").value.trim().toUpperCase();
-const result=document.getElementById("results");
-
-if(!code){
-result.innerText="Please enter a fault code.";
-return;
-}
-
-const fault=faultDatabase[code];
-
-if(!fault){
-result.innerText="Code "+code+
-"\nNot yet in the demonstration database."+
-"\nConsult vehicle-specific diagnostic information.";
-return;
-}
-
-result.innerText=
-"FAULT CODE: "+code+
-"\n\nDESCRIPTION:\n"+fault.description+
-"\n\nPOSSIBLE CAUSES:\n- "+fault.causes.join("\n- ")+
-"\n\nRECOMMENDED TESTS:\n- "+fault.tests.join("\n- ")+
-"\n\nIMPORTANT: Verify the fault using vehicle-specific specifications.";
-}
-
-</script>
-<section id="vehicle-database">
-  <h2>Renault Clio II 1.4 16V Diagnostic</h2>
-  <p>Engine: K4J petrol</p>
-  <p>Fault code: P0335</p>
-  <h3>Crankshaft Position Sensor Circuit</h3>
-
-  <h4>Possible causes</h4>
-  <ul>
-    <li>Faulty crankshaft position sensor</li>
-    <li>Damaged sensor wiring</li>
-    <li>Corroded connector</li>
-    <li>Damaged trigger wheel</li>
-    <li>ECU signal fault</li>
-  </ul>
-
-  <h4>Recommended tests</h4>
-  <ol>
-    <li>Inspect sensor connector and wiring.</li>
-    <li>Check sensor resistance against the correct specification.</li>
-    <li>Check sensor AC output while cranking.</li>
-    <li>Inspect crankshaft trigger wheel.</li>
-    <li>Check whether the ECU receives an RPM signal while cranking.</li>
-  </ol>
-
-  <p><strong>Important:</strong> Confirm wiring pinouts and
-  specifications using the exact ECU variant before testing.
-  Do not replace parts based on the fault code alone.</p>
+<div class="status"><span>Generic OBD-II foundation</span><span>Toyota Corolla starter coverage</span><span>Manufacturer packages expandable</span><span>VIN decoding not yet connected</span></div>
 </section>
-HTML
-
-<section id="toyota-diagnostics">
-  <h2>Toyota Vehicle Diagnostics</h2>
-
-  <label>Model</label>
-  <select id="toyotaModel">
-    <option value="Corolla">Corolla</option>
-  </select>
-
-  <label>Engine</label>
-  <select id="toyotaEngine">
-    <option value="1.6">1.6 Petrol</option>
-    <option value="1.8">1.8 Petrol</option>
-    <option value="2.0">2.0 Petrol</option>
-  </select>
-
-  <label>Transmission</label>
-  <select id="toyotaTransmission">
-    <option value="Manual">Manual</option>
-    <option value="Automatic">Automatic</option>
-  </select>
-
-  <button onclick="checkToyota()">Identify Toyota</button>
-
-  <div id="toyotaResult"></div>
+<section class="card">
+<h2>2. Enter diagnostic trouble code</h2>
+<label for="code">Fault code (DTC)</label><input id="code" maxlength="8" placeholder="e.g. P0335 or P0700" autocapitalize="characters">
+<button id="diagnose">Analyse fault code</button>
+<button class="secondary" id="clear">Clear</button>
+<div id="result" class="result"><span class="muted">Select a vehicle and enter a fault code to view available information.</span></div>
 </section>
-
+<section class="card wide">
+<h2>3. Diagnostic modules planned</h2>
+<div class="fields">
+<div><span class="tag">Engine / ECU</span><span class="tag">Transmission / TCM</span><span class="tag">ABS / stability</span><span class="tag">Airbag / SRS</span></div>
+<div><span class="tag">Body control / BCM</span><span class="tag">Immobiliser</span><span class="tag">Hybrid / EV</span><span class="tag">Charging / starting</span></div>
+</div>
+<p class="small">Module access depends on vehicle year, market, diagnostic connector, protocol, scan-tool hardware, security gateway and licensed manufacturer data. The browser page alone cannot communicate with a car.</p>
+</section>
+</div>
+</main>
+<footer>AutoDiagPro is a diagnostic aid, not a substitute for OEM service information, safe workshop procedures, or a qualified technician. Never replace parts solely from a DTC; verify the fault with measurements and vehicle-specific tests.</footer>
 <script>
-function checkToyota() {
-  const model = document.getElementById("toyotaModel").value;
-  const engine = document.getElementById("toyotaEngine").value;
-  const transmission =
-    document.getElementById("toyotaTransmission").value;
-
-  let result = `
-    <h3>Toyota ${model}</h3>
-    <p>Engine: ${engine} Petrol</p>
-    <p>Transmission: ${transmission}</p>
-  `;
-
-  if (transmission === "Manual") {
-    result += `
-      <p>Transmission control:
-      Manual gearbox. No separate automatic
-      transmission control module assumed.</p>
-    `;
-  } else {
-    result += `
-      <p>Transmission control:
-      Automatic transmission. Check the
-      vehicle-specific transmission control
-      system and wiring diagram.</p>
-    `;
-  }
-
-  document.getElementById("toyotaResult").innerHTML = result;
-}JavaScript
-// TOYOTA COROLLA VEHICLE DATABASE
-const toyotaCorolla = {
-    "1.6": {
-        engines: ["1ZR-FE", "3ZZ-FE"],
-        transmissions: ["Manual", "Automatic"]
-    },
-    "1.8": {
-        engines: ["2ZR-FE"],
-        transmissions: ["Manual", "Automatic"]
-    },
-    "2.0": {
-        engines: ["3ZR-FE"],
-        transmissions: ["Manual", "Automatic"]
-    }
+"use strict";
+const CATALOG = [
+ {make:"Toyota",region:"Asia",models:["Corolla","Camry","Yaris","Hilux","RAV4","Land Cruiser","Fortuner","Prius"]},
+ {make:"Lexus",region:"Asia",models:["IS","ES","GS","LS","NX","RX","GX","LX"]},
+ {make:"Honda",region:"Asia",models:["Civic","Accord","Jazz / Fit","CR-V","HR-V","Pilot"]},
+ {make:"Nissan",region:"Asia",models:["Micra","Almera","Sentra","Altima","Qashqai","X-Trail","Navara","Patrol"]},
+ {make:"Mazda",region:"Asia",models:["Mazda2","Mazda3","Mazda6","CX-3","CX-5","BT-50"]},
+ {make:"Mitsubishi",region:"Asia",models:["Mirage","Lancer","ASX","Outlander","Pajero","Triton"]},
+ {make:"Subaru",region:"Asia",models:["Impreza","Legacy","Forester","Outback","XV / Crosstrek"]},
+ {make:"Suzuki",region:"Asia",models:["Swift","Baleno","Vitara","Jimny","S-Cross","Ertiga"]},
+ {make:"Isuzu",region:"Asia",models:["D-Max","MU-X"]},
+ {make:"BYD",region:"China",models:["Dolphin","Atto 3","Seal","Han","Tang","Song"]},
+ {make:"Chery",region:"China",models:["Tiggo 4","Tiggo 7","Tiggo 8","Arrizo"]},
+ {make:"Geely",region:"China",models:["Coolray","Emgrand","Monjaro","Geometry"]},
+ {make:"GWM / Haval",region:"China",models:["Haval H2","Haval H6","Jolion","Tank 300","P-Series"]},
+ {make:"MG",region:"China",models:["MG3","MG4","ZS","HS","5"]},
+ {make:"Changan",region:"China",models:["CS35","CS55","CS75","Alsvin"]},
+ {make:"JAC",region:"China",models:["T-Series","S-Series","J7"]},
+ {make:"Volkswagen",region:"Europe",models:["Polo","Golf","Passat","Tiguan","T-Cross","Amarok"]},
+ {make:"Audi",region:"Europe",models:["A1","A3","A4","A6","Q3","Q5","Q7","e-tron"]},
+ {make:"BMW",region:"Europe",models:["1 Series","3 Series","5 Series","X1","X3","X5","i3","i4"]},
+ {make:"Mercedes-Benz",region:"Europe",models:["A-Class","C-Class","E-Class","S-Class","GLA","GLC","GLE","Sprinter"]},
+ {make:"Renault",region:"Europe",models:["Clio","Megane","Captur","Duster","Kwid","Kangoo"]},
+ {make:"Peugeot",region:"Europe",models:["108","208","308","3008","5008","Partner"]},
+ {make:"Citroën",region:"Europe",models:["C3","C4","C5 Aircross","Berlingo"]},
+ {make:"Volvo",region:"Europe",models:["S60","S90","XC40","XC60","XC90"]},
+ {make:"Fiat",region:"Europe",models:["500","Panda","Tipo","Doblo","Ducato"]},
+ {make:"Opel / Vauxhall",region:"Europe",models:["Corsa","Astra","Insignia","Mokka","Combo"]},
+ {make:"Ford",region:"North America",models:["Fiesta","Focus","Fusion","Mustang","Escape","Explorer","Ranger","F-Series"]},
+ {make:"Chevrolet",region:"North America",models:["Spark","Aveo","Cruze","Malibu","Equinox","Silverado"]},
+ {make:"GMC",region:"North America",models:["Terrain","Acadia","Sierra","Canyon"]},
+ {make:"Jeep",region:"North America",models:["Renegade","Compass","Cherokee","Grand Cherokee","Wrangler","Gladiator"]},
+ {make:"Dodge",region:"North America",models:["Charger","Challenger","Durango","Journey"]},
+ {make:"RAM",region:"North America",models:["1500","2500","3500","ProMaster"]},
+ {make:"Tesla",region:"North America",models:["Model 3","Model S","Model X","Model Y","Cybertruck"]},
+ {make:"Hyundai",region:"Korea",models:["i10","i20","i30","Elantra","Tucson","Santa Fe","Kona","Ioniq"]},
+ {make:"Kia",region:"Korea",models:["Picanto","Rio","Cerato","Sportage","Sorento","Seltos","EV6"]},
+ {make:"Genesis",region:"Korea",models:["G70","G80","G90","GV70","GV80"]},
+ {make:"Tata",region:"India",models:["Tiago","Altroz","Nexon","Harrier","Safari"]},
+ {make:"Mahindra",region:"India",models:["Thar","Scorpio","XUV300","XUV700","Bolero"]},
+ {make:"Proton",region:"Other",models:["Saga","Persona","X50","X70"]},
+ {make:"Perodua",region:"Other",models:["Axia","Bezza","Myvi","Ativa","Alza"]}
+];
+const DTC = {
+ "P0100":{title:"Mass or volume air-flow circuit malfunction",system:"Engine",causes:["MAF sensor or circuit fault","Damaged wiring or connector","Intake air leak or contamination"],tests:["Inspect the air filter, intake duct and MAF connector","Check power, ground and signal against the correct wiring diagram","Compare live MAF readings with vehicle-specific specifications"]},
+ "P0171":{title:"System too lean — Bank 1",system:"Engine",causes:["Unmetered air / vacuum leak","Low fuel pressure or restricted fuel supply","MAF measurement error or exhaust leak before the sensor"],tests:["Inspect intake and vacuum hoses; smoke-test if appropriate","Check fuel trims at idle and raised RPM","Measure fuel pressure and verify MAF data to OEM specifications"]},
+ "P0300":{title:"Random or multiple cylinder misfire detected",system:"Engine",causes:["Ignition, fuel or compression problem","Vacuum leak or air-metering issue","Mechanical timing or engine condition issue"],tests:["Review freeze-frame and cylinder misfire counters","Inspect plugs, coils and injector operation","Perform compression/leak-down tests if indicated"]},
+ "P0335":{title:"Crankshaft position sensor A circuit malfunction",system:"Engine",causes:["Crankshaft position sensor or wiring fault","Damaged trigger wheel / reluctor or incorrect air gap","Power, ground, connector or ECU input issue"],tests:["Inspect sensor connector and harness for damage or oil ingress","Check sensor supply and signal type using the correct wiring diagram","Scope crankshaft signal and compare with known-good, vehicle-specific waveform"]},
+ "P0340":{title:"Camshaft position sensor A circuit malfunction",system:"Engine",causes:["Camshaft sensor or circuit fault","Timing or reluctor target problem","Connector, wiring or ECU issue"],tests:["Inspect connector and harness","Verify sensor supply, ground and signal type","Compare cam/crank correlation with OEM specifications"]},
+ "P0420":{title:"Catalyst system efficiency below threshold — Bank 1",system:"Engine / emissions",causes:["Catalytic converter efficiency loss","Exhaust leak or oxygen-sensor issue","Engine misfire or fuelling fault damaging catalyst"],tests:["Resolve misfires and fuel-trim faults first","Inspect exhaust for leaks","Evaluate upstream/downstream oxygen sensor data using the OEM test procedure"]},
+ "P0700":{title:"Transmission control system — request for MIL illumination",system:"Transmission",causes:["A transmission control module has stored one or more faults","Wiring, power or communication issue may be present"],tests:["Scan the transmission controller directly for its specific codes","Record freeze-frame and module identification","Follow the exact sub-code test plan; P0700 alone does not identify a failed part"]},
+ "P0715":{title:"Input / turbine speed sensor A circuit",system:"Transmission",causes:["Input speed sensor or circuit fault","Damaged wiring or connector","Internal reluctor / target or module fault"],tests:["Confirm the code in the transmission module","Inspect connector and harness","Compare input-speed live data and scope the signal using vehicle-specific specifications"]},
+ "P0720":{title:"Output speed sensor circuit",system:"Transmission",causes:["Output speed sensor or wiring fault","Damaged tone wheel / reluctor","TCM or connector fault"],tests:["Read transmission-module codes and live output speed","Inspect sensor wiring and connector","Test signal and compare with vehicle-specific service data"]},
+ "P0750":{title:"Shift solenoid A malfunction",system:"Transmission",causes:["Solenoid or internal harness fault","Connector, wiring or power-supply issue","Hydraulic or valve-body problem; control-module fault is possible"],tests:["Confirm manufacturer-specific definition and subcodes","Check fluid level/condition using the specified procedure","Measure solenoid resistance/current and inspect wiring to OEM specifications"]},
+ "P0755":{title:"Shift solenoid B malfunction",system:"Transmission",causes:["Solenoid or internal harness fault","Wiring, connector or power-supply issue","Hydraulic / valve-body or control issue"],tests:["Confirm code and transmission variant","Inspect harness and connectors","Perform commanded actuator and electrical tests per OEM procedure"]},
+ "P0741":{title:"Torque converter clutch performance / stuck off",system:"Transmission",causes:["Torque-converter clutch or hydraulic control issue","ATF level, condition or incorrect fluid","Wiring, solenoid, valve-body or transmission wear"],tests:["Confirm the code in the transmission controller and identify the exact transmission","Check ATF level and condition using the manufacturer's specified temperature and procedure","Compare commanded and actual lock-up slip data; test wiring and solenoid only to the correct service specifications"]},
+ "P0746":{title:"Pressure control solenoid A performance / stuck off",system:"Transmission",causes:["Pressure-control solenoid or circuit fault","Valve-body contamination or hydraulic pressure problem","Incorrect / degraded ATF or internal transmission wear"],tests:["Verify the manufacturer-specific code definition and transmission model","Check ATF level and condition using the correct procedure","Run the specified pressure and solenoid electrical tests; do not replace the solenoid based on code alone"]},
+ "P0776":{title:"Pressure control solenoid B performance / stuck off",system:"Transmission",causes:["Pressure-control solenoid B or wiring fault","Valve-body or hydraulic pressure issue","ATF condition or internal transmission wear"],tests:["Confirm code and transmission variant in the TCM","Inspect external and internal harnesses as directed by service data","Perform OEM pressure, resistance and actuator tests"]},
+ "P0796":{title:"Pressure control solenoid C performance / stuck off",system:"Transmission",causes:["Pressure-control solenoid C or circuit fault","Valve-body or hydraulic control issue","ATF or internal transmission problem"],tests:["Confirm manufacturer-specific definition and transmission variant","Check fluid level and condition to the specified procedure","Perform the correct electrical and hydraulic tests using OEM data"]},
+ "P2714":{title:"Pressure control solenoid D performance / stuck off",system:"Transmission",causes:["Pressure-control solenoid D or circuit issue","Valve-body / hydraulic pressure fault","ATF condition or internal transmission wear"],tests:["Confirm the exact definition for this vehicle and transmission","Inspect connectors and wiring using the correct diagram","Compare commanded pressure data and carry out OEM solenoid / hydraulic tests"]}
 };
+const $=id=>document.getElementById(id);
+function populateMakes(){
+ const region=$("region").value, current=$("make").value;
+ const list=CATALOG.filter(v=>region==="All"||v.region===region);
+ $("make").innerHTML=list.map(v=>`<option>${v.make}</option>`).join("");
+ if(list.some(v=>v.make===current)) $("make").value=current;
+ populateModels();
+}
+function populateModels(){
+ const item=CATALOG.find(v=>v.make===$("make").value);
+ $("model").innerHTML=(item?item.models:[]).map(m=>`<option>${m}</option>`).join("");
+}
+$("region").addEventListener("change",populateMakes);
+$("make").addEventListener("change",populateModels);
+populateMakes();
+function updateVehicleFields(){
+ const isToyotaCorolla=$("make").value==="Toyota" && $("model").value==="Corolla";
+ $("toyotaEngineWrap").hidden=!isToyotaCorolla;
+ $("genericEngineWrap").hidden=isToyotaCorolla;
+}
+$("make").addEventListener("change",updateVehicleFields);
+$("model").addEventListener("change",updateVehicleFields);
+updateVehicleFields();
+
+function analyse(){
+ const code=$("code").value.trim().toUpperCase();
+ const make=$("make").value,model=$("model").value,trans=$("transmission").value;
+ const year=$("year").value;
+ const engine=(make==="Toyota" && model==="Corolla") ? $("toyotaEngine").value : $("engine").value.trim();
+ const fuel=$("fuel").value;
+ const item=DTC[code];
+ if(!/^[PBCU][0-9A-F]{4}$/.test(code)){
+  $("result").innerHTML="<h3>Check fault-code format</h3><p>Enter a five-character standard DTC, for example P0335.</p>";return;
+ }
+ if(!item){
+  $("result").innerHTML=`<h3>${code}: No verified record in this starter database</h3><p>This does not mean the vehicle has no fault. Scan all available modules and consult the correct manufacturer service information for ${make} ${model}.</p><p><strong>Next step:</strong> Record the full scan-tool description, module name, vehicle year, engine code and any suffix/subcode before diagnosing.</p>`;return;
+ }
+ const transmissionFault=item.system==="Transmission";
+ let vehicleNote="";
+ if(transmissionFault && trans==="Manual"){
+  vehicleNote=`<p><strong>Manual gearbox selected:</strong> Do not assume this vehicle has a separate automatic transmission control module, torque-converter clutch or shift solenoids. Confirm that the code genuinely belongs to this vehicle and identify the reporting module before testing.</p>`;
+ } else if(transmissionFault && (trans==="Automatic" || trans==="CVT" || trans==="DCT / DSG")){
+  vehicleNote=`<p><strong>Automatic transmission selected:</strong> Scan the transmission controller directly, not only the engine ECU. Confirm the exact transmission code and the manufacturer's definition before testing. Some vehicles report a generic P-code differently.</p>`;
+ }
+ let toyotaNote="";
+ if(make==="Toyota" && model==="Corolla"){
+  toyotaNote=`<p><strong>Toyota Corolla selection:</strong> ${engine}; ${trans}. Corolla transmission and control systems vary by model year, market and transmission code. This starter guide does not assume one TCM layout or one set of pinouts across all Corolla versions.</p>`;
+ }
+ $("result").innerHTML=`<h3>${code} — ${item.title}</h3><span class="tag">${item.system}</span><span class="tag">${make} ${model}</span><span class="tag">${trans}</span>
+ <p><strong>Vehicle selected:</strong> ${[year,engine,fuel,$("market").value].filter(Boolean).join(" · ")||"Details not fully entered"}</p>
+ ${toyotaNote}${vehicleNote}
+ <p><strong>Possible causes — not confirmed failures:</strong></p><ul>${item.causes.map(x=>`<li>${x}</li>`).join("")}</ul>
+ <p><strong>Recommended diagnostic checks:</strong></p><ol>${item.tests.map(x=>`<li>${x}</li>`).join("")}</ol>
+ <p class="small">Generic starter guidance only. Confirm the code definition, pinouts, limits, test conditions and repair steps for this exact model year, engine, transmission and market. A DTC does not prove a component has failed. No exact fault location can be guaranteed from a code alone.</p>`;
+}
+$("diagnose").addEventListener("click",analyse);
+$("code").addEventListener("keydown",e=>{if(e.key==="Enter")analyse()});
+$("clear").addEventListener("click",()=>{$("code").value="";$("result").innerHTML='<span class="muted">Enter a fault code to begin.</span>'});
 </script>
 </body>
 </html>
