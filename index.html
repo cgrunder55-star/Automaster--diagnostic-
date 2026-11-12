@@ -43,15 +43,26 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 <div class="stats"><div class="stat"><strong id="makeCount">0</strong><span>Vehicle makes</span></div><div class="stat"><strong id="modelCount">0</strong><span>Listed model names</span></div><div class="stat"><strong id="codeCount">0</strong><span>Built-in DTC references</span></div></div>
 </section>
 
+<section class="card full">
+<h2>2. Engine & gearbox reference database</h2>
+<p class="muted">Choose the make and model above, then load the available example powertrains. Options vary by year and country; always confirm the engine code and gearbox code from the VIN or vehicle identification plate.</p>
+<div class="fields">
+<div><label for="powertrainEngine">Available engine / motor examples</label><select id="powertrainEngine"><option value="">Load a vehicle first</option></select></div>
+<div><label for="powertrainTransmission">Gearbox type</label><select id="powertrainTransmission"><option value="">Select an engine example</option></select></div>
+</div>
+<div class="actions"><button onclick="loadPowertrainReference()">Load engine & gearbox options</button><button class="secondary" onclick="showPowertrainDetails()">Show details</button></div>
+<div class="result" id="powertrainResult" aria-live="polite">Select a vehicle make and model above, then load the reference options.</div>
+</section>
+
 <section class="card">
-<h2>2. OBD-II fault-code lookup</h2>
+<h2>3. OBD-II fault-code lookup</h2>
 <label for="dtc">Enter a fault code</label><input id="dtc" placeholder="Example: P0335" maxlength="8" autocapitalize="characters">
 <div class="actions"><button onclick="lookupCode()">Look up code</button><button class="secondary" onclick="clearCode()">Clear</button></div>
 <div class="result" id="codeResult" aria-live="polite">Try P0335, P0016, P0087, P0299, P0700, P2002 or another listed code.</div>
 </section>
 
 <section class="card">
-<h2>3. Diagnostic system selection</h2>
+<h2>4. Diagnostic system selection</h2>
 <label for="system">System to investigate</label><select id="system">
 <option>Engine / ECM / PCM</option><option>Automatic transmission / TCM</option><option>ABS / stability control</option><option>Airbag / SRS</option><option>Body control / BCM</option><option>Electric power steering</option><option>HVAC / climate control</option><option>Hybrid / high-voltage battery</option><option>EV drive / battery management</option><option>Instrument cluster</option><option>Immobiliser / key system</option><option>Diesel particulate filter / emissions</option><option>Fuel system</option><option>Cooling system</option><option>Charging system</option><option>Network / CAN communication</option>
 </select>
@@ -60,14 +71,14 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 
 <section class="card full">
-<h2>4. Diagnostic notes</h2>
+<h2>5. Diagnostic notes</h2>
 <label for="notes">Record symptoms, test results or repair notes</label><textarea id="notes" placeholder="Example: Engine cranks but does not start. P0335 stored. Inspect crank sensor wiring and check live RPM while cranking..."></textarea>
 <div class="actions"><button onclick="saveNotes()">Save notes on this device</button><button class="secondary" onclick="clearNotes()">Clear notes</button></div>
 <div class="result muted" id="notesResult">Notes are stored locally in this browser only.</div>
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Version 2026-11-12 • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
+<footer>AutoDiagPro • Version 2026-11-12 • Engine and gearbox reference added • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
@@ -377,6 +388,131 @@ const MAKER_NOTES={
 "P0700":"GWM/Haval-specific focus: interrogate the transmission controller directly and identify the exact DCT/automatic gearbox before diagnosis."
 }
 };
+
+// Starter powertrain catalogue: representative combinations, not a complete factory fitment list.
+// Each entry must be checked against the exact model year, market, VIN and engine/gearbox code.
+const POWERTRAIN_DB={
+"Toyota|Corolla":[
+ {engine:"1.6L 1ZR-FE petrol",fuel:"Petrol",gearboxes:["5-speed manual","4-speed automatic (selected older markets/years)"],note:"Common Corolla 1.6 application; confirm generation and engine code."},
+ {engine:"1.8L 2ZR-FE petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets/years)","CVT (selected markets/years)"],note:"Fitment differs by generation and market."},
+ {engine:"2.0L M20A-FKS petrol",fuel:"Petrol",gearboxes:["Direct Shift-CVT / CVT (market dependent)"],note:"Later-generation application in selected markets."},
+ {engine:"1.8L 2ZR-FXE hybrid",fuel:"Hybrid petrol-electric",gearboxes:["Hybrid e-CVT power-split transaxle"],note:"Hybrid transaxle is not a conventional belt CVT."}
+],
+"Toyota|Hilux":[
+ {engine:"2.4L 2GD-FTV diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Common later-generation diesel option; check market and year."},
+ {engine:"2.8L 1GD-FTV diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Common later-generation diesel option; check output and gearbox code."},
+ {engine:"2.7L 2TR-FE petrol",fuel:"Petrol",gearboxes:["5-speed manual (selected markets)","6-speed automatic (selected markets)"],note:"Availability varies substantially by region."}
+],
+"Toyota|Fortuner":[
+ {engine:"2.4L 2GD-FTV diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Common in selected markets and model years."},
+ {engine:"2.8L 1GD-FTV diesel",fuel:"Diesel",gearboxes:["6-speed automatic","6-speed manual (selected markets)"],note:"Confirm exact transmission code."},
+ {engine:"2.7L 2TR-FE petrol",fuel:"Petrol",gearboxes:["6-speed automatic (market dependent)"],note:"Selected markets only."}
+],
+"Toyota|Yaris":[
+ {engine:"1.0L petrol (1KR family)",fuel:"Petrol",gearboxes:["5-speed manual","CVT (selected generations/markets)"],note:"Engine code varies by generation."},
+ {engine:"1.3L petrol (2NZ / 1NR family)",fuel:"Petrol",gearboxes:["5-speed manual","4-speed automatic / CVT (generation dependent)"],note:"Confirm engine family by VIN."},
+ {engine:"1.5L petrol (2NR / M15 family)",fuel:"Petrol",gearboxes:["5- or 6-speed manual","CVT (market dependent)"],note:"Later and regional variants differ."}
+],
+"Volkswagen|Polo":[
+ {engine:"1.0L MPI petrol",fuel:"Petrol",gearboxes:["5-speed manual"],note:"Common naturally aspirated small-engine configuration."},
+ {engine:"1.0L TSI petrol",fuel:"Petrol",gearboxes:["5- or 6-speed manual","7-speed DSG (selected variants)"],note:"Transmission depends on power output and model year."},
+ {engine:"1.6L TDI diesel",fuel:"Diesel",gearboxes:["5- or 6-speed manual","DSG (selected variants)"],note:"Not offered in every market or year."}
+],
+"Volkswagen|Golf":[
+ {engine:"1.4L TSI petrol",fuel:"Petrol",gearboxes:["6-speed manual","7-speed DSG"],note:"Generation and engine code determine gearbox pairing."},
+ {engine:"1.5L TSI petrol",fuel:"Petrol",gearboxes:["6-speed manual","7-speed DSG"],note:"Later-generation selected markets."},
+ {engine:"2.0L TDI diesel",fuel:"Diesel",gearboxes:["6-speed manual","6- or 7-speed DSG"],note:"Gearbox family varies by torque and year."}
+],
+"Ford|Ranger":[
+ {engine:"2.0L EcoBlue single-turbo diesel",fuel:"Diesel",gearboxes:["6-speed manual","10-speed automatic (selected versions)"],note:"Check generation and exact gearbox code."},
+ {engine:"2.0L EcoBlue bi-turbo diesel",fuel:"Diesel",gearboxes:["10-speed automatic (common pairing)"],note:"Market and model-year dependent."},
+ {engine:"3.2L Duratorq TDCi diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Earlier-generation application in selected markets."}
+],
+"Ford|Fiesta":[
+ {engine:"1.0L EcoBoost petrol",fuel:"Petrol",gearboxes:["5- or 6-speed manual","6-speed automatic / DCT (selected years/markets)"],note:"Exact transmission varies by generation."},
+ {engine:"1.25L / 1.4L petrol",fuel:"Petrol",gearboxes:["5-speed manual","4-speed automatic (selected versions)"],note:"Older-generation examples; verify engine code."},
+ {engine:"1.5L TDCi diesel",fuel:"Diesel",gearboxes:["5- or 6-speed manual"],note:"Selected markets and model years."}
+],
+"BMW|3 Series":[
+ {engine:"2.0L turbo petrol (B48 family)",fuel:"Petrol",gearboxes:["6-speed manual (selected variants)","8-speed automatic"],note:"Engine output and gearbox depend on chassis generation."},
+ {engine:"2.0L turbo diesel (B47 family)",fuel:"Diesel",gearboxes:["6-speed manual (selected variants)","8-speed automatic"],note:"Confirm engine and transmission identification."},
+ {engine:"3.0L turbo petrol (B58 family)",fuel:"Petrol",gearboxes:["8-speed automatic","6-speed manual (selected performance variants)"],note:"Not all body styles or markets offer a manual gearbox."}
+],
+"Mercedes-Benz|C-Class":[
+ {engine:"1.5L / 2.0L turbo petrol (M264/M254 families)",fuel:"Petrol",gearboxes:["9G-TRONIC 9-speed automatic"],note:"Engine family varies by generation and market."},
+ {engine:"2.0L turbo diesel (OM654 family)",fuel:"Diesel",gearboxes:["9G-TRONIC 9-speed automatic","Manual on selected older versions"],note:"Check exact chassis and model year."}
+],
+"Honda|Civic":[
+ {engine:"1.5L VTEC Turbo petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets)","CVT"],note:"Transmission availability varies by generation."},
+ {engine:"2.0L naturally aspirated petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected versions)","CVT"],note:"Selected trims and markets."},
+ {engine:"2.0L e:HEV hybrid",fuel:"Hybrid petrol-electric",gearboxes:["Hybrid e-CVT drive system"],note:"Not a conventional stepped automatic gearbox."}
+],
+"Hyundai|Tucson":[
+ {engine:"1.6L T-GDi petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets)","7-speed DCT","8-speed automatic (variant dependent)"],note:"Check generation, drivetrain and engine output."},
+ {engine:"2.0L CRDi diesel",fuel:"Diesel",gearboxes:["6-speed manual","8-speed automatic (selected versions)"],note:"Older and newer variants differ."},
+ {engine:"1.6L hybrid / plug-in hybrid",fuel:"Hybrid / Plug-in Hybrid",gearboxes:["6-speed automatic hybrid transmission"],note:"Hybrid system architecture differs from mild-hybrid versions."}
+],
+"Kia|Sportage":[
+ {engine:"1.6L T-GDi petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets)","7-speed DCT","8-speed automatic (variant dependent)"],note:"Confirm model generation and powertrain."},
+ {engine:"1.6L CRDi diesel",fuel:"Diesel",gearboxes:["6-speed manual","7-speed DCT"],note:"Selected markets and model years."},
+ {engine:"1.6L hybrid",fuel:"Hybrid petrol-electric",gearboxes:["6-speed automatic hybrid transmission"],note:"Hybrid gearbox is application-specific."}
+],
+"Nissan|Qashqai":[
+ {engine:"1.3L DIG-T petrol",fuel:"Petrol",gearboxes:["6-speed manual","Xtronic CVT"],note:"Selected generations and markets."},
+ {engine:"1.5L e-POWER",fuel:"Series hybrid petrol-electric",gearboxes:["Single-speed electric drive reduction gear"],note:"Engine generates electricity; wheels are driven electrically."},
+ {engine:"1.6L dCi diesel",fuel:"Diesel",gearboxes:["6-speed manual","Xtronic CVT (selected variants)"],note:"Older-generation selected markets."}
+],
+"Isuzu|D-Max":[
+ {engine:"1.9L RZ4E-TC diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Common later-generation engine in selected markets."},
+ {engine:"3.0L 4JJ3-TCX diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Confirm market, output and transmission code."},
+ {engine:"2.5L / 3.0L older diesel families",fuel:"Diesel",gearboxes:["5-speed manual","4- or 5-speed automatic (selected variants)"],note:"Older D-Max fitment varies by generation."}
+],
+"Mazda|Mazda3":[
+ {engine:"2.0L Skyactiv-G petrol",fuel:"Petrol",gearboxes:["6-speed manual","6-speed automatic"],note:"Availability varies by generation and market."},
+ {engine:"2.5L Skyactiv-G petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected versions)","6-speed automatic"],note:"Selected markets and model years."},
+ {engine:"2.2L Skyactiv-D diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Selected older markets."}
+],
+"Renault|Duster":[
+ {engine:"1.6L SCe petrol",fuel:"Petrol",gearboxes:["5-speed manual","CVT (selected markets)"],note:"Generation and region dependent."},
+ {engine:"1.5L dCi diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed EDC (selected versions)"],note:"EDC is a dual-clutch transmission."},
+ {engine:"1.3L TCe petrol",fuel:"Petrol",gearboxes:["6-speed manual","CVT / EDC (market dependent)"],note:"Confirm exact generation and gearbox."}
+],
+"Chery|Tiggo 7":[
+ {engine:"1.5L turbo petrol",fuel:"Petrol",gearboxes:["CVT","6-speed DCT (variant dependent)"],note:"Chery powertrain combinations vary by market and model year."},
+ {engine:"1.6L TGDI petrol",fuel:"Petrol",gearboxes:["7-speed DCT (selected versions)"],note:"Confirm engine code and gearbox family."}
+],
+"GWM / Haval|Haval Jolion":[
+ {engine:"1.5L turbo petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets)","7-speed wet DCT"],note:"Transmission and calibration vary by year and market."},
+ {engine:"1.5L hybrid petrol-electric",fuel:"Hybrid",gearboxes:["Dedicated hybrid transmission (DHT)"],note:"Not the same unit as the conventional DCT."}
+],
+"Toyota|RAV4":[
+ {engine:"2.0L petrol",fuel:"Petrol",gearboxes:["6-speed manual (selected markets)","CVT"],note:"Generation and market dependent."},
+ {engine:"2.5L petrol",fuel:"Petrol",gearboxes:["8-speed automatic (selected versions)"],note:"Selected generations and markets."},
+ {engine:"2.5L hybrid",fuel:"Hybrid",gearboxes:["Hybrid e-CVT power-split transaxle"],note:"Hybrid transaxle is not a conventional belt CVT."}
+]
+};
+function loadPowertrainReference(){
+ const key=makeEl.value+"|"+modelEl.value, rows=POWERTRAIN_DB[key]||[];
+ const engineSelect=document.getElementById("powertrainEngine"), gearboxSelect=document.getElementById("powertrainTransmission"), out=document.getElementById("powertrainResult");
+ if(!rows.length){engineSelect.innerHTML='<option value="">No verified examples loaded</option>';gearboxSelect.innerHTML='<option value="">Select an engine example</option>';out.innerHTML='<h3>No model-specific entries loaded yet</h3><p>This make/model remains available in the worldwide selector, but its engine and gearbox combinations have not yet been added to this starter database. Enter the engine and transmission from the vehicle plate or VIN-specific catalogue. We will expand coverage model by model.</p>';return;}
+ engineSelect.innerHTML=rows.map((r,i)=>`<option value="${i}">${escapeHtml(r.engine)} — ${escapeHtml(r.fuel)}</option>`).join("");
+ updatePowertrainGearboxes();out.innerHTML=`<h3>${escapeHtml(makeEl.value)} ${escapeHtml(modelEl.value)} reference loaded</h3><p>${rows.length} example powertrain entries available. Choose an engine and gearbox, then press Show details.</p><p class="muted">Examples only: confirm exact year, market, VIN and identification codes.</p>`;
+}
+function updatePowertrainGearboxes(){
+ const rows=POWERTRAIN_DB[makeEl.value+"|"+modelEl.value]||[], i=Number(document.getElementById("powertrainEngine").value), row=rows[i], select=document.getElementById("powertrainTransmission");
+ select.innerHTML=row?row.gearboxes.map((g,j)=>`<option value="${j}">${escapeHtml(g)}</option>`).join(""):'<option value="">No gearbox options loaded</option>';
+}
+function showPowertrainDetails(){
+ const rows=POWERTRAIN_DB[makeEl.value+"|"+modelEl.value]||[], row=rows[Number(document.getElementById("powertrainEngine").value)], gearbox=document.getElementById("powertrainTransmission");
+ const out=document.getElementById("powertrainResult");
+ if(!row){out.innerHTML='<p>First select a make and model above, then load the engine and gearbox options.</p>';return;}
+ const selected=gearbox.options[gearbox.selectedIndex]?.text||"Not specified";
+ const manual=/manual/i.test(selected), automatic=/automatic|cvt|dct|dsg|edc|e-cvt|dht/i.test(selected);
+ out.innerHTML=`<h3>${escapeHtml(makeEl.value)} ${escapeHtml(modelEl.value)} — powertrain example</h3><p><b>Engine:</b> ${escapeHtml(row.engine)}<br><b>Fuel:</b> ${escapeHtml(row.fuel)}<br><b>Gearbox:</b> ${escapeHtml(selected)}</p><p>${escapeHtml(row.note)}</p>${manual?'<p><b>Manual gearbox note:</b> A conventional manual gearbox normally has no separate automatic-transmission control module or shift-solenoid system. Some vehicles still have electronic clutch, gear-position or transmission-related sensors; confirm the exact design.</p>':''}${automatic?'<p><b>Automatic gearbox note:</b> The vehicle may have a TCM or integrated transmission control. Scan the correct transmission module and identify the exact gearbox code before electrical or hydraulic tests.</p>':''}<p class="muted">This is an indicative application reference, not a VIN-decoded factory build sheet. Do not order parts or perform repairs from this entry alone.</p>`;
+}
+document.getElementById("powertrainEngine").addEventListener("change",updatePowertrainGearboxes);
+makeEl.addEventListener("change",()=>{document.getElementById("powertrainResult").textContent="Vehicle changed. Load the engine and gearbox options again.";});
+modelEl.addEventListener("change",()=>{document.getElementById("powertrainResult").textContent="Vehicle changed. Load the engine and gearbox options again.";});
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
