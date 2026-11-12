@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
 <title>AutoDiagPro | Worldwide Vehicle Diagnostics</title>
+<meta name="version" content="2026-11-12-P0016-fix">
 <style>
 :root{--bg:#0b1220;--panel:#141f30;--panel2:#1b2a40;--line:#2b3b52;--text:#edf4ff;--muted:#a9b8cc;--accent:#36c5a1;--warn:#ffc66d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101c2d 55%,#0b1220);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
@@ -46,7 +47,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 <h2>2. OBD-II fault-code lookup</h2>
 <label for="dtc">Enter a fault code</label><input id="dtc" placeholder="Example: P0335" maxlength="8" autocapitalize="characters">
 <div class="actions"><button onclick="lookupCode()">Look up code</button><button class="secondary" onclick="clearCode()">Clear</button></div>
-<div class="result" id="codeResult" aria-live="polite">Try P0335, P0300, P0420, P0700 or another listed code.</div>
+<div class="result" id="codeResult" aria-live="polite">Try P0335, P0016, P0087, P0299, P0700, P2002 or another listed code.</div>
 </section>
 
 <section class="card">
@@ -66,7 +67,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Reference information only • Always confirm exact vehicle application, code definition and test values.</footer>
+<footer>AutoDiagPro • Version 2026-11-12 • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
@@ -116,6 +117,7 @@ const VEHICLES={
 };
 const D=(description,causes,checks,system="Powertrain")=>({description,causes,checks,system});
 const CODES={
+"P0016":D("Crankshaft / Camshaft Position Correlation (Bank 1 Sensor A)","Possible causes include incorrect mechanical timing, a stretched timing chain or belt, a damaged reluctor/tone wheel, or a crankshaft/camshaft sensor signal or wiring fault.","Check freeze-frame data and related crank/cam sensor codes; inspect sensor connectors and wiring; compare live cam/crank synchronisation; verify mechanical timing using the exact engine-specific manufacturer procedure before replacing parts."),
 "P0100":D("Mass or Volume Air Flow Circuit","MAF sensor, wiring, connector, intake leaks or power/ground supply.","Inspect intake duct and connector; check power and ground; compare live MAF readings with manufacturer specifications."),
 "P0101":D("Mass or Volume Air Flow Circuit Range / Performance","Dirty or faulty MAF sensor, intake leak, blocked air filter or wiring fault.","Inspect air filter and intake for leaks; check MAF live data and fuel trims; use approved cleaning procedure only if appropriate."),
 "P0102":D("Mass or Volume Air Flow Circuit Low Input","MAF signal circuit short to ground, sensor fault, poor connection or supply problem.","Inspect connector and harness; check supply, ground and signal against service data."),
@@ -177,6 +179,47 @@ const CODES={
 "P2563":D("Turbocharger Boost Control Position Sensor Range / Performance","Turbo actuator position sensor, wiring, actuator sticking or vacuum problem.","Compare commanded and actual actuator position; inspect linkage and wiring."),
 "P2610":D("ECM / PCM Engine Off Timer Performance","Controller timer logic, power interruption or module fault.","Check battery voltage, module power/ground and related codes; follow OEM diagnostic flow."),
 "P2A00":D("O2 Sensor Circuit Range / Performance (Bank 1 Sensor 1)","Air/fuel sensor, exhaust leak, mixture fault or wiring issue.","Check fuel trims, exhaust leaks, sensor heater and live sensor response."),
+
+"P0011":D("A Camshaft Position Timing Over-Advanced / System Performance (Bank 1)","Variable valve timing oil-control valve, low/dirty oil, timing chain/belt issue or camshaft actuator fault.","Check oil level and correct specification; inspect VVT connector and oil-control valve; compare commanded and actual cam timing."),
+"P0087":D("Fuel Rail / System Pressure Too Low","Restricted fuel filter, weak pump, low supply pressure, leaking injector or rail-pressure control fault.","Compare requested and actual fuel pressure; inspect filter and low-pressure supply; use high-pressure fuel safety procedures."),
+"P0093":D("Fuel System Large Leak Detected","Fuel leak, injector leak-off, rail-pressure loss or fuel-pressure control fault.","Inspect for external fuel leaks first; compare rail pressure and leak-off using the specified procedure."),
+"P0113":D("Intake Air Temperature Sensor 1 Circuit High Input","Open circuit, disconnected sensor, poor connector or sensor fault.","Inspect connector and harness; compare cold-soak IAT with ambient temperature; test circuit to wiring diagram."),
+"P0191":D("Fuel Rail Pressure Sensor A Range / Performance","Rail-pressure sensor, wiring, fuel supply, pressure regulator or pump issue.","Compare commanded and actual rail pressure under the conditions in freeze-frame data; inspect wiring and fuel supply."),
+"P0217":D("Engine Overtemperature Condition","Cooling-system leak, thermostat, fan, water pump, radiator restriction or incorrect temperature signal.","Stop the engine if overheating; allow it to cool; check coolant level and leaks; test fan, thermostat and pump safely."),
+"P0234":D("Turbocharger / Supercharger Overboost Condition","Boost-control actuator, wastegate, vacuum hose, sticking vane mechanism or sensor fault.","Compare requested and actual boost; inspect actuator movement, vacuum/boost hoses and MAP sensor plausibility."),
+"P0299":D("Turbocharger / Supercharger Underboost Condition","Boost leak, split hose, intercooler leak, actuator fault, exhaust restriction or turbo wear.","Pressure/smoke-test charge-air system; inspect actuator and vacuum supply; compare requested and actual boost."),
+"P0336":D("Crankshaft Position Sensor A Range / Performance","Crank sensor signal quality, damaged reluctor/tone wheel, incorrect sensor gap or wiring interference.","Check crank signal waveform and RPM stability while cranking; inspect reluctor and sensor installation."),
+"P0341":D("Camshaft Position Sensor A Range / Performance (Bank 1)","Cam sensor, wiring, timing correlation, reluctor or variable valve timing issue.","Inspect connector and harness; compare cam/crank synchronisation; verify mechanical timing if correlation faults are present."),
+"P0403":D("Exhaust Gas Recirculation Control Circuit","EGR solenoid/valve, wiring, connector, fuse or driver circuit fault.","Check EGR command, power and ground; inspect harness and test actuator circuit to OEM specifications."),
+"P0440":D("Evaporative Emission Control System Malfunction","Fuel cap seal, EVAP hose, purge valve, vent valve or leak-detection circuit fault.","Inspect cap and hoses; command purge/vent valves where supported; smoke-test the EVAP system."),
+"P0507":D("Idle Control System RPM Higher Than Expected","Intake/vacuum leak, throttle body contamination, idle relearn issue or purge valve fault.","Check fuel trims and commanded idle; inspect intake leaks and throttle operation; follow model-specific relearn procedure."),
+"P0563":D("System Voltage High","Alternator regulator, charging wiring, battery-sense circuit or ground fault.","Measure charging voltage at battery and alternator; inspect sense wiring and grounds; follow OEM charging limits."),
+"P0601":D("ECM / PCM Memory Check Sum Error","Controller internal memory fault, low voltage event, corrupted calibration or power/ground interruption.","Check battery and module supplies/grounds; verify software/calibration bulletins before condemning the controller."),
+"P0620":D("Generator Control Circuit","Alternator control wiring, regulator, fuse, belt or PCM/ECM control fault.","Check charging command and feedback data; inspect alternator connector, belt, fuses and wiring."),
+"P0685":D("ECM / PCM Power Relay Control Circuit Open","Main relay, fuse, relay-control wiring, connector or controller driver fault.","Check relay operation and load-side voltage; test control circuit and module power/ground using wiring diagram."),
+"P0705":D("Transmission Range Sensor A Circuit (PRNDL Input)","Range/inhibitor switch, adjustment, connector, wiring or transmission selector mechanism fault.","Compare selected gear with scan-tool range data; inspect adjustment and wiring. Transmission-specific procedure required.","Transmission"),
+"P0717":D("Input / Turbine Speed Sensor A Circuit No Signal","Input-speed sensor, wiring, connector or internal transmission harness fault.","Check live input-speed data and circuit integrity; inspect transmission connector and fluid contamination.","Transmission"),
+"P0722":D("Output Speed Sensor No Signal","Output-speed sensor, wiring, connector or reluctor/tone wheel fault.","Check output-speed live data; inspect sensor and wiring; compare with other vehicle-speed signals.","Transmission"),
+"P0731":D("Incorrect Gear Ratio — First Gear","Internal clutch/band slip, hydraulic pressure fault, incorrect fluid or speed-sensor issue.","Check fluid level/condition by OEM method; scan transmission live data; do not continue driving if severe slip occurs.","Transmission"),
+"P0740":D("Torque Converter Clutch Circuit Malfunction","TCC solenoid, wiring, valve body, converter or control fault.","Check TCM codes and TCC command; inspect wiring and fluid; test solenoid/hydraulic circuit to OEM procedure.","Transmission"),
+"P0746":D("Pressure Control Solenoid A Performance / Stuck Off","Pressure-control solenoid, valve body, fluid condition, wiring or hydraulic pressure fault.","Check fluid level/condition and TCM live pressure data; inspect connector; follow specified hydraulic tests.","Transmission"),
+"P0770":D("Shift Solenoid E Malfunction","Shift solenoid, internal harness, valve body or controller circuit fault.","Read transmission-specific codes; inspect connector and test solenoid resistance/current to OEM data.","Transmission"),
+"P0842":D("Transmission Fluid Pressure Sensor / Switch A Circuit Low","Pressure sensor, short to ground, connector, wiring or hydraulic issue.","Check sensor reference/ground/signal and compare pressure data with OEM specifications.","Transmission"),
+"P0850":D("Park / Neutral Switch Input Circuit","Range switch, selector adjustment, wiring or connector fault.","Compare Park/Neutral status in live data; inspect switch adjustment and circuit continuity.","Transmission"),
+"P2002":D("Diesel Particulate Filter Efficiency Below Threshold (Bank 1)","DPF damage, soot/ash loading, exhaust leak or pressure/temperature sensor issue.","Read DPF differential pressure and soot estimates; inspect hoses and sensors; follow approved regeneration criteria."),
+"P242F":D("Diesel Particulate Filter Restriction — Ash Accumulation","DPF ash loading, incorrect oil, failed regeneration history or pressure-sensor/pipe fault.","Check ash and soot estimates separately; verify differential pressure and sensor hoses; assess OEM cleaning/replacement criteria."),
+"P2453":D("Diesel Particulate Filter Pressure Sensor A Range / Performance","Differential-pressure sensor, blocked/melted hoses, wiring or exhaust pressure-port blockage.","With engine off, check for plausible near-zero differential pressure; inspect both hoses and compare readings at specified RPM."),
+"P2458":D("Diesel Particulate Filter Regeneration Duration","Repeated interrupted regeneration, excessive soot, sensor fault or engine issue preventing regeneration.","Review regeneration history and enabling conditions; diagnose engine faults and pressure/temperature sensors before service regeneration."),
+"P246C":D("Diesel Particulate Filter Restriction — Forced Limited Power","High DPF soot load, failed regeneration or pressure-sensor fault.","Do not force regeneration above OEM soot/temperature limits; check differential pressure, soot estimate and root cause."),
+"U0001":D("High Speed CAN Communication Bus","CAN wiring short/open, poor connector, module power/ground or network termination issue.","Use the correct wiring diagram; check module supplies/grounds and network topology before resistance testing.","Network"),
+"U0102":D("Lost Communication With Transfer Case Control Module","Module power/ground, CAN wiring, connector or module fault.","Check transfer-case module fuses/grounds and network codes in other modules; inspect harness.","Network"),
+"U0122":D("Lost Communication With Vehicle Dynamics Control Module","ABS/stability module supply, ground, network wiring or connector fault.","Scan all modules; check related fuses/grounds and CAN wiring using OEM procedure.","Network"),
+"U0146":D("Lost Communication With Gateway A","Gateway power/ground, network wiring, connector or configuration fault.","Check gateway supplies and network topology; record which modules are missing from the scan.","Network"),
+"C0035":D("Left Front Wheel Speed Sensor Circuit","Wheel-speed sensor, wiring, connector, tone ring or bearing encoder fault.","Compare all wheel-speed live data at low speed; inspect sensor wiring and encoder ring.","Chassis"),
+"C0040":D("Right Front Wheel Speed Sensor Circuit","Wheel-speed sensor, wiring, connector, tone ring or bearing encoder fault.","Compare all wheel-speed live data at low speed; inspect sensor wiring and encoder ring.","Chassis"),
+"B0020":D("Passenger Frontal Deployment Loop (definition varies by manufacturer)","SRS connector, wiring, deployment loop or module fault.","Use an SRS-capable scan tool and exact OEM procedure; never probe deployment circuits with a test light or ordinary meter.","Body"),
+"B1000":D("Manufacturer-Specific Body / Control Module Fault","Meaning varies significantly by manufacturer and module; may relate to controller self-test or configuration.","Record the reporting module and full subcode; retrieve the exact OEM definition and guided test plan.","Body"),
+
 "U0100":D("Lost Communication With ECM / PCM A","CAN wiring, module power/ground, connector fault or failed module.","Check all module communication; test ECM fuses, grounds and network wiring using OEM procedure.","Network"),
 "U0101":D("Lost Communication With TCM","TCM power/ground, CAN wiring, connector or module fault.","Check TCM powers/grounds and network continuity; scan other modules for matching communication faults.","Network"),
 "U0121":D("Lost Communication With ABS Control Module","ABS module supply, ground, CAN wiring or connector fault.","Check ABS fuses and grounds; inspect network wiring; scan other modules for related U-codes.","Network"),
@@ -201,6 +244,109 @@ const SYSTEM_GUIDES={
 "Charging system":"Maintains battery charge and vehicle electrical supply. Test battery health, alternator output, belt, wiring, grounds and voltage drop under load.",
 "Network / CAN communication":"Allows modules to exchange data. Check module powers and grounds first, then inspect network wiring, connectors, termination and communication codes using the vehicle wiring diagram."
 };
+
+const MAKER_NOTES={
+"Toyota":{
+"P0016":"Toyota-specific focus: confirm the exact engine code and whether it uses a timing chain or belt. Check crankshaft and camshaft sensor connectors and wiring, review cam/crank synchronisation data, and verify mechanical timing using the correct Toyota engine procedure. Do not replace sensors or alter timing based on the code alone.",
+"P0335":"Toyota-specific focus: identify the exact engine family first. Check the crankshaft-position sensor connector, harness routing, sensor installation and crank signal waveform. Confirm the correct pinout and resistance/signal test for that engine; do not assume every Corolla engine uses the same sensor.",
+"P0700":"Toyota-specific focus: use a scan tool that can enter the Engine and ECT/Transmission control systems as fitted. Retrieve the transmission ECU's own codes and freeze-frame data; P0700 alone is only a request indicator.",
+"P0420":"Toyota-specific focus: confirm engine family and market calibration. Check for exhaust leaks, misfire/fuel-trim faults and upstream/downstream air-fuel or oxygen sensor data before considering the catalyst.",
+"P2002":"Toyota-specific focus: confirm whether the selected diesel model is equipped with a DPF and which after-treatment layout it uses. Check differential-pressure sensor hoses, temperature sensors and soot/ash data before any regeneration."
+},
+"Volkswagen":{
+"P0335":"VW-specific focus: verify the engine code and the G28 engine-speed sensor circuit. Check connector/harness condition and crank/cam synchronisation using the correct ECU measuring values.",
+"P0700":"VW-specific focus: interrogate the transmission controller (commonly address 02 on many VAG tools) and save its own fault codes. Transmission type and controller differ by gearbox code.",
+"P0420":"VW-specific focus: identify engine code and catalyst monitoring strategy; check exhaust leaks, misfire history, fuel trims and lambda sensor data before catalyst diagnosis."
+},
+"BMW":{
+"P0335":"BMW-specific focus: identify engine family and DME version. Check crankshaft sensor signal, connector and harness, and review cam/crank synchronisation faults before replacing the sensor.",
+"P0700":"BMW-specific focus: scan the EGS transmission controller directly and record the exact BMW fault text and environmental data. Generic P0700 is not enough to diagnose the gearbox.",
+"P0420":"BMW-specific focus: check engine-specific mixture adaptations, misfire counters, exhaust leaks and oxygen-sensor/lambda values before assessing catalyst efficiency."
+},
+"Mercedes-Benz":{
+"P0335":"Mercedes-Benz-specific focus: identify engine code and ME control-unit version. Check crankshaft-position signal and harness using the engine-specific wiring diagram.",
+"P0700":"Mercedes-Benz-specific focus: read the EGS transmission control unit with a Mercedes-capable scan tool; save manufacturer fault numbers and event data.",
+"P0420":"Mercedes-Benz-specific focus: verify engine variant and emissions package; check mixture adaptation, misfires, exhaust leaks and oxygen-sensor values before catalyst conclusions."
+},
+"Ford":{
+"P0335":"Ford-specific focus: confirm engine family and PCM calibration. Inspect CKP wiring and connector, then verify the crank signal and synchronisation with the correct scan-tool data.",
+"P0700":"Ford-specific focus: scan the transmission control module or integrated PCM strategy as fitted. Record all transmission-specific codes before testing solenoids or fluid pressure.",
+"P0420":"Ford-specific focus: check misfire history, fuel trims, exhaust leaks and catalyst monitor data for the exact engine/calibration."
+},
+"Honda":{
+"P0335":"Honda-specific focus: confirm engine code and CKP sensor arrangement. Inspect the sensor harness and reluctor/timing components; check CKP/CMP synchronisation with HDS-capable data where available.",
+"P0700":"Honda-specific focus: retrieve the transmission-specific DTCs with an HDS-capable tool; identify whether the vehicle has conventional automatic, CVT or another transmission.",
+"P0420":"Honda-specific focus: confirm engine and market; check misfires, air/fuel sensor response, exhaust leaks and fuel trims before catalyst replacement."
+},
+"Hyundai":{
+"P0335":"Hyundai-specific focus: verify engine code and ECU type. Inspect CKP sensor wiring and signal, and check for related camshaft-sensor or timing-correlation codes.",
+"P0700":"Hyundai-specific focus: scan the automatic-transaxle controller with a Hyundai-capable tool and record its own codes; confirm the exact transmission model.",
+"P0420":"Hyundai-specific focus: check engine-specific oxygen-sensor data, exhaust leaks, misfire counts and fuel trims before condemning the catalytic converter."
+},
+"Kia":{
+"P0335":"Kia-specific focus: verify engine code and ECU calibration; inspect CKP wiring, connector and signal waveform, especially alongside cam/crank correlation codes.",
+"P0700":"Kia-specific focus: retrieve the TCU/automatic-transaxle codes with a Kia-capable tool; identify the gearbox type before testing.",
+"P0420":"Kia-specific focus: confirm engine and emissions package; check exhaust leaks, misfires, fuel trims and oxygen-sensor response first."
+},
+"Nissan":{
+"P0335":"Nissan-specific focus: identify engine and ECM type. Inspect the crankshaft-position sensor and harness; check cam/crank synchronisation and CONSULT-capable live data where available.",
+"P0700":"Nissan-specific focus: read the TCM with CONSULT-capable equipment and record the exact TCM codes; confirm whether the vehicle uses CVT or conventional automatic transmission.",
+"P0420":"Nissan-specific focus: check exhaust leaks, fuel trims, misfire history and front/rear air-fuel or oxygen-sensor data for the exact engine."
+},
+"Chevrolet":{
+"P0335":"Chevrolet-specific focus: identify engine RPO and ECM. Check CKP sensor wiring, reluctor condition and crank variation/synchronisation procedures where specified.",
+"P0700":"Chevrolet-specific focus: scan the transmission control module separately where fitted; save the exact TCM codes and freeze-frame data before repairs.",
+"P0420":"Chevrolet-specific focus: verify engine RPO and emissions calibration; check exhaust leaks, misfires and upstream/downstream oxygen-sensor activity."
+},
+"Mazda":{
+"P0335":"Mazda-specific focus: confirm engine family and PCM. Inspect CKP connector and harness; compare crank signal and cam/crank synchronisation with Mazda service data.",
+"P0700":"Mazda-specific focus: scan the TCM where fitted and retrieve the transmission's own codes; confirm transmission model and calibration.",
+"P0420":"Mazda-specific focus: check engine-specific fuel trims, misfire history, exhaust leaks and oxygen-sensor data before catalyst diagnosis."
+},
+"Mitsubishi":{
+"P0335":"Mitsubishi-specific focus: confirm engine code and ECU. Inspect crank sensor wiring and trigger plate; verify signal with the correct scan data and wiring diagram.",
+"P0700":"Mitsubishi-specific focus: retrieve transmission ECU codes with MUT-capable equipment where applicable; identify CVT versus conventional automatic.",
+"P0420":"Mitsubishi-specific focus: check exhaust leaks, mixture control, misfire history and oxygen-sensor response for the exact engine."
+},
+"Isuzu":{
+"P0335":"Isuzu-specific focus: confirm engine code and ECU, especially on diesel applications. Inspect crank sensor harness and signal; check related cam synchronisation faults.",
+"P0700":"Isuzu-specific focus: scan the transmission controller separately where fitted; verify the exact gearbox and its manufacturer fault list.",
+"P2002":"Isuzu-specific focus: confirm DPF fitment and engine calibration. Check differential-pressure pipes, sensor zero reading, exhaust temperatures and soot estimate; follow the model-specific regeneration limits."
+},
+"Renault":{
+"P0335":"Renault-specific focus: identify engine code and injection ECU. Check crank sensor wiring, connector and signal; review cam/crank synchronisation and engine-speed data.",
+"P0700":"Renault-specific focus: interrogate the automatic transmission ECU with Renault-capable diagnostics and retrieve the exact gearbox-specific codes.",
+"P0420":"Renault-specific focus: check engine-specific lambda readings, exhaust leaks, misfire history and fuel trims before catalyst replacement."
+},
+"Peugeot":{
+"P0335":"Peugeot-specific focus: confirm engine code and injection ECU. Inspect crank sensor wiring and timing references; use manufacturer live data for engine speed and synchronisation.",
+"P0700":"Peugeot-specific focus: read the gearbox ECU directly with Diagbox-capable equipment; confirm whether the transmission is EAT, AMT, manual or another type.",
+"P2002":"Peugeot-specific focus: identify the exact HDi/BlueHDi engine and DPF additive configuration, if fitted. Check pressure pipes, differential pressure, additive system and regeneration history."
+},
+"Volvo":{
+"P0335":"Volvo-specific focus: identify engine code and ECM generation. Check crank sensor signal, harness and cam/crank synchronisation with Volvo-capable diagnostics.",
+"P0700":"Volvo-specific focus: retrieve the transmission module's own fault codes and identify the gearbox variant; generic P0700 does not specify the failed component.",
+"P0420":"Volvo-specific focus: confirm engine and emissions configuration; check lambda data, exhaust leaks, misfire history and fuel adaptations."
+},
+"Land Rover":{
+"P0335":"Land Rover-specific focus: confirm engine family and ECU. Inspect crank sensor circuit and signal, and check related synchronisation faults using the correct wiring diagram.",
+"P0700":"Land Rover-specific focus: interrogate the transmission control module with a platform-capable scan tool; identify gearbox type and software level.",
+"P2002":"Land Rover-specific focus: check DPF differential-pressure sensor and pipes, exhaust-temperature sensors, soot load and the engine faults that may prevent regeneration."
+},
+"Chery":{
+"P0335":"Chery-specific focus: identify the exact engine code and ECU supplier/version. Confirm the correct sensor pinout and waveform from the model-specific wiring/service information.",
+"P0700":"Chery-specific focus: scan the transmission controller directly with equipment supporting that model; identify the CVT/DCT/automatic gearbox and its own fault codes."
+},
+"BYD":{
+"P0335":"BYD-specific focus: first confirm whether this is a combustion, plug-in hybrid or EV powertrain and which controller reported the code. Use the correct model-specific diagnostic system.",
+"P0700":"BYD-specific focus: identify the hybrid/EV or conventional transmission architecture and the reporting controller. Retrieve the manufacturer-specific module codes; do not assume a conventional TCM layout."
+},
+"GWM / Haval":{
+"P0335":"GWM/Haval-specific focus: confirm engine code and ECU version; inspect CKP circuit and signal using the model-specific wiring diagram and scan data.",
+"P0700":"GWM/Haval-specific focus: interrogate the transmission controller directly and identify the exact DCT/automatic gearbox before diagnosis."
+}
+};
+
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
 function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("");document.getElementById("makeCount").textContent=makes.length;document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);document.getElementById("codeCount").textContent=Object.keys(CODES).length}
@@ -208,7 +354,7 @@ function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<op
 makeEl.addEventListener("change",fillModels);
 function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value,vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
 function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vin").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin."}
-function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p><p class="muted">This is a general reference. Confirm the exact code definition, affected module and test procedure for the selected make, model, year, engine and market.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
+function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){const selectedMake=makeEl.value;const makerNote=(MAKER_NOTES[selectedMake]||{})[code];out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p>${makerNote?`<h4>${escapeHtml(selectedMake)}-specific diagnostic focus</h4><p>${escapeHtml(makerNote)}</p>`:`<h4>Manufacturer-specific information</h4><p>Selected make: ${escapeHtml(selectedMake)}. No separate make-specific note is loaded for this code yet. Confirm the exact manufacturer definition, ECU/TCM identity, wiring diagram and test values for this vehicle.</p>`}<p class="muted">This is a workshop reference, not an OEM repair procedure. Confirm exact engine, gearbox, model year, market and module before testing or replacing parts.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
 function clearCode(){document.getElementById("dtc").value="";document.getElementById("codeResult").textContent="Enter a code to look it up."}
 function showSystem(){const s=document.getElementById("system").value;document.getElementById("systemResult").innerHTML=`<h3>${escapeHtml(s)}</h3><p>${escapeHtml(SYSTEM_GUIDES[s])}</p>`}
 function saveNotes(){try{localStorage.setItem("autodiagpro_notes",document.getElementById("notes").value);document.getElementById("notesResult").textContent="Notes saved in this browser on this device."}catch(e){document.getElementById("notesResult").textContent="This browser does not allow local note storage."}}
