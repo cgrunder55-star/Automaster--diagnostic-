@@ -2,109 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
-<title>AutoDiagPro | Vehicle Diagnostics</title>
+<title>AutoDiagPro | Worldwide Vehicle Diagnostics</title>
 <style>
-:root{--bg:#0b1220;--panel:#141f30;--panel2:#1b2a40;--line:#2b3b52;--text:#edf4ff;--muted:#a9b8cc;--accent:#36c5a1;--accent2:#1e9b83;--warn:#ffc66d;--danger:#ff8585}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101c2d 55%,#0b1220);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-header{padding:24px 18px 18px;text-align:center;border-bottom:1px solid var(--line);background:#0d1726}
-header h1{margin:0;font-size:clamp(26px,5vw,38px);letter-spacing:.4px}header h1 span{color:var(--accent)}header p{margin:6px 0 0;color:var(--muted)}
-main{max-width:1100px;margin:22px auto;padding:0 14px 40px}.notice{border:1px solid #6d5832;background:#332a1b;color:#ffe3b2;padding:12px 14px;border-radius:12px;margin-bottom:18px;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 28px #0002}.card h2{font-size:20px;margin:0 0 14px}.full{grid-column:1/-1}
-.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-label{display:block;font-size:13px;color:var(--muted);margin:0 0 5px}
-input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0c1727;color:var(--text);font:inherit;min-height:46px}
-textarea{min-height:90px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:0;border-radius:10px;background:var(--accent);color:#06251e;font-weight:750;padding:12px 17px;font-size:15px;cursor:pointer}button:hover{background:#62dfbf}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-.result{margin-top:14px;background:#0c1727;border:1px solid var(--line);border-radius:12px;padding:15px;min-height:58px}.result h3{margin:0 0 8px;color:var(--accent)}.result h4{margin:14px 0 5px}.result ul{margin:5px 0 0;padding-left:22px}.muted{color:var(--muted)}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:3px 9px;margin:3px 4px 3px 0;color:#c7d7ea;font-size:12px}
+:root{--bg:#0b1220;--panel:#141f30;--panel2:#1b2a40;--line:#2b3b52;--text:#edf4ff;--muted:#a9b8cc;--accent:#36c5a1;--warn:#ffc66d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101c2d 55%,#0b1220);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
+header{text-align:center;padding:24px 16px;background:#0d1726;border-bottom:1px solid var(--line)}header h1{margin:0;font-size:clamp(27px,5vw,39px)}header h1 span{color:var(--accent)}header p{margin:6px 0 0;color:var(--muted)}
+main{max-width:1150px;margin:22px auto;padding:0 14px 40px}.notice{background:#332a1b;border:1px solid #6d5832;color:#ffe3b2;padding:12px 14px;border-radius:12px;margin-bottom:18px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 28px #0002}.full{grid-column:1/-1}.card h2{font-size:20px;margin:0 0 14px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;font-size:13px;color:var(--muted);margin:0 0 5px}
+input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0c1727;color:var(--text);font:inherit;min-height:46px}textarea{min-height:90px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:0;border-radius:10px;background:var(--accent);color:#06251e;font-weight:750;padding:12px 17px;font-size:15px;cursor:pointer}button:hover{filter:brightness(1.08)}button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.result{margin-top:14px;background:#0c1727;border:1px solid var(--line);border-radius:12px;padding:15px;min-height:58px}.result h3{margin:0 0 8px;color:var(--accent)}.result h4{margin:14px 0 5px}.result ul{padding-left:22px}.muted{color:var(--muted)}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:3px 9px;margin:3px 4px 3px 0;color:#c7d7ea;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.stat{background:#0c1727;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}.stat strong{display:block;color:var(--accent);font-size:20px}.stat span{font-size:12px;color:var(--muted)}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
-@media(max-width:720px){.grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}main{margin-top:14px}.card{padding:15px}}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.full{grid-column:auto}.stats{grid-template-columns:1fr 1fr}main{margin-top:14px}.card{padding:15px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>Auto<span>Diag</span>Pro</h1>
-  <p>Worldwide vehicle selection • OBD-II fault-code reference • Diagnostic system guide</p>
-</header>
+<header><h1>Auto<span>Diag</span>Pro</h1><p>Worldwide vehicle selection • OBD-II fault-code reference • Diagnostic system guide</p></header>
 <main>
-  <div class="notice"><strong>Important:</strong> This version is a diagnostic reference and vehicle-information tool. It does not connect to or scan a vehicle by itself. Live scanning requires a compatible OBD-II adapter, supported software connection and vehicle-specific data.</div>
-  <div class="grid">
-    <section class="card full">
-      <h2>1. Select vehicle</h2>
-      <div class="fields">
-        <div><label for="make">Vehicle make</label><select id="make"></select></div>
-        <div><label for="model">Model</label><select id="model"></select></div>
-        <div><label for="year">Year</label><select id="year"></select></div>
-        <div><label for="fuel">Fuel / power type</label><select id="fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option><option>CNG</option></select></div>
-        <div><label for="engine">Engine / motor</label><input id="engine" placeholder="e.g. 1.6 petrol, 2.0 TDI, 150 kW EV"></div>
-        <div><label for="transmission">Transmission</label><select id="transmission"><option>Manual</option><option>Automatic</option><option>CVT</option><option>DCT / DSG</option><option>Single-speed EV</option><option>Other / Unknown</option></select></div>
-      </div>
-      <div class="actions"><button onclick="showVehicle()">Show vehicle details</button><button class="secondary" onclick="resetVehicle()">Reset vehicle</button></div>
-      <div class="result" id="vehicleResult" aria-live="polite">Choose a make and model to begin.</div>
-    </section>
+<div class="notice"><strong>Workshop note:</strong> AutoDiagPro is a diagnostic reference tool. It does not yet connect to or scan a vehicle. Live scanning requires a compatible OBD-II adapter, supported device connection, and vehicle-specific protocol and data support. Always verify procedures against manufacturer service information.</div>
+<div class="grid">
+<section class="card full">
+<h2>1. Worldwide vehicle selector</h2>
+<div class="fields">
+<div><label for="make">Vehicle make</label><select id="make"></select></div>
+<div><label for="model">Model</label><select id="model"></select></div>
+<div><label for="year">Year</label><select id="year"></select></div>
+<div><label for="market">Market / region</label><select id="market"><option>South Africa</option><option>Europe</option><option>North America</option><option>South America</option><option>Asia</option><option>Middle East</option><option>Australia / New Zealand</option><option>Other / unknown</option></select></div>
+<div><label for="fuel">Fuel / power type</label><select id="fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option><option>CNG</option></select></div>
+<div><label for="engine">Engine / motor</label><input id="engine" placeholder="e.g. 1.6 petrol, 2.0 TDI, 150 kW EV"></div>
+<div><label for="transmission">Transmission</label><select id="transmission"><option>Manual</option><option>Automatic</option><option>CVT</option><option>DCT / DSG</option><option>Single-speed EV</option><option>Other / Unknown</option></select></div>
+<div><label for="vin">VIN (optional; do not share publicly)</label><input id="vin" maxlength="17" placeholder="17-character VIN, if known"></div>
+</div>
+<div class="actions"><button onclick="showVehicle()">Show vehicle details</button><button class="secondary" onclick="resetVehicle()">Reset vehicle</button></div>
+<div class="result" id="vehicleResult" aria-live="polite">Choose a make and model to begin.</div>
+<div class="stats"><div class="stat"><strong id="makeCount">0</strong><span>Vehicle makes</span></div><div class="stat"><strong id="modelCount">0</strong><span>Listed model names</span></div><div class="stat"><strong id="codeCount">0</strong><span>Built-in DTC references</span></div></div>
+</section>
 
-    <section class="card">
-      <h2>2. OBD-II fault-code lookup</h2>
-      <label for="dtc">Enter a fault code</label>
-      <input id="dtc" placeholder="Example: P0335" maxlength="8" autocapitalize="characters">
-      <div class="actions"><button onclick="lookupCode()">Look up code</button><button class="secondary" onclick="document.getElementById('dtc').value='';document.getElementById('codeResult').innerHTML='Enter an OBD-II code.'">Clear</button></div>
-      <div class="result" id="codeResult" aria-live="polite">Enter a code such as P0300, P0420 or P0335.</div>
-    </section>
+<section class="card">
+<h2>2. OBD-II fault-code lookup</h2>
+<label for="dtc">Enter a fault code</label><input id="dtc" placeholder="Example: P0335" maxlength="8" autocapitalize="characters">
+<div class="actions"><button onclick="lookupCode()">Look up code</button><button class="secondary" onclick="clearCode()">Clear</button></div>
+<div class="result" id="codeResult" aria-live="polite">Try P0335, P0300, P0420, P0700 or another listed code.</div>
+</section>
 
-    <section class="card">
-      <h2>3. Select diagnostic system</h2>
-      <label for="system">System to investigate</label>
-      <select id="system">
-        <option value="Engine / ECM / PCM">Engine / ECM / PCM</option>
-        <option value="Automatic transmission / TCM">Automatic transmission / TCM</option>
-        <option value="ABS / stability control">ABS / stability control</option>
-        <option value="Airbag / SRS">Airbag / SRS</option>
-        <option value="Body control / BCM">Body control / BCM</option>
-        <option value="Electric power steering">Electric power steering</option>
-        <option value="HVAC / climate control">HVAC / climate control</option>
-        <option value="Hybrid / high-voltage battery">Hybrid / high-voltage battery</option>
-        <option value="EV drive / battery management">EV drive / battery management</option>
-        <option value="Instrument cluster">Instrument cluster</option>
-        <option value="Immobiliser / key system">Immobiliser / key system</option>
-      </select>
-      <div class="actions"><button onclick="showSystem()">Show system guide</button></div>
-      <div class="result" id="systemResult" aria-live="polite">Choose a system to see what it controls and what to check.</div>
-    </section>
+<section class="card">
+<h2>3. Diagnostic system selection</h2>
+<label for="system">System to investigate</label><select id="system">
+<option>Engine / ECM / PCM</option><option>Automatic transmission / TCM</option><option>ABS / stability control</option><option>Airbag / SRS</option><option>Body control / BCM</option><option>Electric power steering</option><option>HVAC / climate control</option><option>Hybrid / high-voltage battery</option><option>EV drive / battery management</option><option>Instrument cluster</option><option>Immobiliser / key system</option><option>Diesel particulate filter / emissions</option><option>Fuel system</option><option>Cooling system</option><option>Charging system</option><option>Network / CAN communication</option>
+</select>
+<div class="actions"><button onclick="showSystem()">Show system guide</button></div>
+<div class="result" id="systemResult">Choose a system to see what it controls and what to check.</div>
+</section>
 
-    <section class="card full">
-      <h2>4. Diagnostic notes</h2>
-      <label for="notes">Record symptoms, test results or repair notes</label>
-      <textarea id="notes" placeholder="Example: Engine cranks but does not start. P0335 stored. Check crankshaft sensor wiring and signal..."></textarea>
-      <div class="actions"><button onclick="saveNotes()">Save notes on this device</button><button class="secondary" onclick="clearNotes()">Clear notes</button></div>
-      <div class="result muted" id="notesResult">Notes are stored locally in this browser only.</div>
-    </section>
-  </div>
+<section class="card full">
+<h2>4. Diagnostic notes</h2>
+<label for="notes">Record symptoms, test results or repair notes</label><textarea id="notes" placeholder="Example: Engine cranks but does not start. P0335 stored. Inspect crank sensor wiring and check live RPM while cranking..."></textarea>
+<div class="actions"><button onclick="saveNotes()">Save notes on this device</button><button class="secondary" onclick="clearNotes()">Clear notes</button></div>
+<div class="result muted" id="notesResult">Notes are stored locally in this browser only.</div>
+</section>
+</div>
 </main>
-<footer>AutoDiagPro • Reference information is a starting point, not a substitute for the manufacturer's workshop information.</footer>
+<footer>AutoDiagPro • Reference information only • Always confirm exact vehicle application, code definition and test values.</footer>
 <script>
 "use strict";
-const VEHICLES = {
+const VEHICLES={
 "Acura":["ILX","Integra","MDX","RDX","TLX"],
 "Alfa Romeo":["Giulia","Stelvio","Tonale","Giulietta"],
 "Audi":["A1","A3","A4","A5","A6","A7","A8","Q2","Q3","Q5","Q7","Q8","TT","e-tron"],
-"BMW":["1 Series","2 Series","3 Series","4 Series","5 Series","7 Series","X1","X3","X5","X6","X7","i3","i4","iX"],
-"BYD":["Atto 3","Dolphin","Seal","Sealion 6","Tang","Han"],
+"BAIC":["X25","X35","X55","BJ40"],
+"BMW":["1 Series","2 Series","3 Series","4 Series","5 Series","6 Series","7 Series","8 Series","X1","X2","X3","X4","X5","X6","X7","i3","i4","i5","i7","iX"],
+"BYD":["Atto 3","Dolphin","Seal","Sealion 6","Tang","Han","Shark 6"],
 "Changan":["Alsvin","CS35","CS55","CS75","UNI-T","UNI-K"],
-"Chery":["Tiggo 4","Tiggo 7","Tiggo 8","Arrizo 5","Omoda 5","Jaecoo 7"],
-"Chevrolet":["Aveo","Cruze","Equinox","Malibu","Silverado","Spark","Trailblazer"],
+"Chery":["Tiggo 2","Tiggo 4","Tiggo 7","Tiggo 8","Arrizo 5","Omoda 5","Jaecoo 7"],
+"Chevrolet":["Aveo","Captiva","Cruze","Equinox","Malibu","Silverado","Spark","Trailblazer"],
 "Citroën":["C3","C4","C5 Aircross","Berlingo"],
 "Dacia":["Duster","Sandero","Logan","Jogger"],
-"Dodge":["Challenger","Charger","Durango","RAM 1500"],
-"Fiat":["500","Panda","Tipo","Ducato","Punto"],
-"Ford":["Fiesta","Focus","Fusion / Mondeo","EcoSport","Escape / Kuga","Everest","Ranger","Territory","Mustang","Transit"],
+"Dodge":["Challenger","Charger","Durango","Journey","RAM 1500"],
+"Fiat":["500","Panda","Tipo","Ducato","Punto","Strada"],
+"Ford":["Fiesta","Focus","Fusion / Mondeo","EcoSport","Escape / Kuga","Everest","Explorer","F-150","Ranger","Territory","Mustang","Transit"],
 "Geely":["Coolray","Emgrand","Monjaro","Geometry C"],
-"Genesis":["G70","G80","G90","GV70","GV80"],
-"GMC":["Terrain","Acadia","Yukon","Sierra"],
-"Great Wall / Haval":["Haval Jolion","Haval H6","Haval H9","P-Series","Steed"],
+"Genesis":["G70","G80","G90","GV60","GV70","GV80"],
+"GWM / Haval":["Haval Jolion","Haval H6","Haval H9","P-Series","Steed","Tank 300","Tank 500"],
 "Honda":["Brio","City","Civic","Accord","Jazz / Fit","HR-V","CR-V","WR-V","Pilot"],
 "Hyundai":["i10","i20","i30","Accent","Elantra","Sonata","Venue","Creta","Kona","Tucson","Santa Fe","Staria"],
-"Infiniti":["Q30","Q50","QX50","QX60","QX80"],
 "Isuzu":["D-Max","MU-X","KB"],
 "JAC":["T6","T8","JS2","JS4","JS6"],
 "Jaguar":["XE","XF","XJ","E-Pace","F-Pace","I-Pace","F-Type"],
@@ -123,44 +107,83 @@ const VEHICLES = {
 "Peugeot":["108","208","308","408","508","2008","3008","5008","Partner"],
 "Renault":["Kwid","Clio","Megane","Captur","Duster","Kiger","Triber","Kangoo"],
 "Subaru":["Impreza","Legacy","Forester","Outback","XV / Crosstrek","WRX","BRZ"],
-"Suzuki":["Alto","Swift","Baleno","Celerio","Dzire","Vitara","Grand Vitara","Jimny","Ertiga"],
+"Suzuki":["Alto","Swift","Baleno","Celerio","Dzire","Vitara","Grand Vitara","Jimny","Ertiga","Fronx"],
 "Tata":["Tiago","Tigor","Altroz","Punch","Nexon","Harrier","Safari"],
 "Tesla":["Model 3","Model S","Model X","Model Y","Cybertruck"],
 "Toyota":["Agya","Auris","Avanza","Camry","Corolla","Corolla Cross","Fortuner","GR86","Hilux","Innova","Land Cruiser","Prado","RAV4","Starlet","Urban Cruiser","Vitz / Yaris"],
 "Volkswagen":["Polo","Golf","Jetta","Passat","T-Cross","T-Roc","Tiguan","Touareg","Amarok","Caddy","Transporter","ID.3","ID.4"],
 "Volvo":["S60","S90","V60","XC40","XC60","XC90","EX30","EX90"]
 };
-const CODES = {
-"P0100":["Mass or Volume Air Flow Circuit","MAF sensor, wiring, connector, intake leaks or power/ground supply.","Inspect the air filter and intake duct; check MAF connector and wiring; compare live MAF readings with manufacturer specifications."],
-"P0110":["Intake Air Temperature Sensor 1 Circuit","IAT sensor, damaged wiring, poor connector contact or an intake/MAF assembly fault.","Inspect connector and wiring; compare cold-soak IAT reading with ambient temperature; test sensor circuit to service data."],
-"P0115":["Engine Coolant Temperature Circuit","Coolant temperature sensor, wiring, connector or low coolant affecting readings.","Check coolant level when cold; inspect sensor connector; compare scan-tool temperature to actual engine temperature."],
-"P0120":["Throttle/Pedal Position Sensor A Circuit","Throttle-position sensor, accelerator pedal sensor, wiring, connector or throttle body fault.","Check related codes and live pedal/throttle data; inspect wiring; perform manufacturer throttle adaptation if specified."],
-"P0130":["O2 Sensor Circuit (Bank 1 Sensor 1)","Oxygen sensor, heater/power supply, wiring, exhaust leak or mixture problem.","Inspect wiring near exhaust; check heater supply and sensor activity; check for exhaust leaks and fuel-trim abnormalities."],
-"P0171":["System Too Lean (Bank 1)","Vacuum leak, intake leak, low fuel pressure, restricted injector or biased MAF sensor.","Smoke-test intake; inspect hoses; check fuel pressure and fuel trims; verify MAF readings."],
-"P0172":["System Too Rich (Bank 1)","Leaking injector, excessive fuel pressure, biased MAF, purge fault or incorrect coolant-temperature reading.","Check fuel trims, fuel pressure, injector leakage, purge operation and coolant-temperature plausibility."],
-"P0201":["Injector Circuit / Cylinder 1","Injector, wiring, connector, driver circuit or power supply fault.","Inspect connector and harness; check injector resistance against specification; use an approved circuit test."],
-"P0300":["Random/Multiple Cylinder Misfire Detected","Ignition components, fuel delivery, vacuum leak, compression or timing problem.","Check freeze-frame data; inspect plugs and coils; check fuel trims, injector operation and compression as appropriate."],
-"P0301":["Cylinder 1 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; swap-test only where appropriate; check injector operation and compression."],
-"P0302":["Cylinder 2 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."],
-"P0303":["Cylinder 3 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."],
-"P0304":["Cylinder 4 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."],
-"P0325":["Knock Sensor 1 Circuit (Bank 1)","Knock sensor, harness, connector, mounting or engine mechanical noise.","Inspect harness and connector; verify sensor installation and torque; compare signal with service data."],
-"P0335":["Crankshaft Position Sensor A Circuit","Crankshaft position sensor, damaged wiring, connector, trigger wheel or sensor gap.","Inspect sensor and harness; check power/ground if applicable; observe engine-speed signal while cranking; verify trigger wheel."],
-"P0340":["Camshaft Position Sensor A Circuit","Camshaft sensor, wiring, connector, timing components or crank/cam correlation.","Inspect connector and harness; check sensor signal; compare cam/crank synchronisation and mechanical timing."],
-"P0401":["Exhaust Gas Recirculation Flow Insufficient","Blocked EGR passages, stuck EGR valve, control solenoid or differential-pressure sensor fault.","Inspect EGR passages and valve; check commanded versus actual EGR data and related sensor hoses."],
-"P0420":["Catalyst System Efficiency Below Threshold (Bank 1)","Exhaust leak, worn catalytic converter, oxygen sensor issue, misfire or mixture fault.","Repair misfires and mixture faults first; inspect exhaust leaks; compare upstream/downstream oxygen-sensor activity."],
-"P0442":["EVAP System Small Leak Detected","Loose/damaged fuel cap, EVAP hose, purge valve, vent valve or canister leak.","Tighten and inspect fuel cap; inspect EVAP hoses; perform an approved smoke test."],
-"P0455":["EVAP System Large Leak Detected","Fuel cap missing/loose, disconnected hose, vent valve or large EVAP leak.","Check fuel cap and filler neck; inspect EVAP lines and valves; smoke-test system."],
-"P0500":["Vehicle Speed Sensor A","Wheel/vehicle speed sensor, wiring, tone ring, connector or network fault.","Compare all wheel-speed and vehicle-speed data; inspect sensor wiring and tone rings."],
-"P0562":["System Voltage Low","Weak battery, charging-system fault, poor terminals/grounds or high resistance wiring.","Test battery condition and charging voltage; inspect terminals, grounds and alternator output."],
-"P0700":["Transmission Control System Malfunction Request","The transmission controller has stored a fault; this code alone does not identify the failed part.","Scan the TCM separately with a capable tool; record its exact codes and freeze-frame data before diagnosis."],
-"P0715":["Input/Turbine Speed Sensor A Circuit","Input-speed sensor, wiring, connector or internal transmission harness fault.","Check TCM codes and live input-speed data; inspect connector and harness; test circuit to manufacturer specifications."],
-"P0720":["Output Speed Sensor Circuit","Output-speed sensor, wiring, connector or tone wheel fault.","Compare output-speed data with vehicle speed; inspect sensor circuit and tone wheel."],
-"P0730":["Incorrect Gear Ratio","Low/incorrect fluid, internal clutch/band slip, hydraulic fault or speed-sensor error.","Check fluid level/condition using the correct procedure; scan TCM; compare commanded and actual gear ratios."],
-"P0741":["Torque Converter Clutch Performance / Stuck Off","Torque-converter clutch, solenoid, valve body, fluid condition or wiring fault.","Scan TCM; check fluid and temperature; compare commanded versus actual TCC slip; follow pressure tests."],
-"P0560":["System Voltage Malfunction","Battery, alternator, wiring, terminals or ground connection fault.","Test battery and charging system; inspect main power and ground connections."]
+const D=(description,causes,checks,system="Powertrain")=>({description,causes,checks,system});
+const CODES={
+"P0100":D("Mass or Volume Air Flow Circuit","MAF sensor, wiring, connector, intake leaks or power/ground supply.","Inspect intake duct and connector; check power and ground; compare live MAF readings with manufacturer specifications."),
+"P0101":D("Mass or Volume Air Flow Circuit Range / Performance","Dirty or faulty MAF sensor, intake leak, blocked air filter or wiring fault.","Inspect air filter and intake for leaks; check MAF live data and fuel trims; use approved cleaning procedure only if appropriate."),
+"P0102":D("Mass or Volume Air Flow Circuit Low Input","MAF signal circuit short to ground, sensor fault, poor connection or supply problem.","Inspect connector and harness; check supply, ground and signal against service data."),
+"P0103":D("Mass or Volume Air Flow Circuit High Input","MAF signal circuit short to voltage, sensor fault or wiring damage.","Inspect harness for shorts; verify sensor supply and signal with wiring diagram."),
+"P0110":D("Intake Air Temperature Sensor 1 Circuit","IAT sensor, damaged wiring, poor connector contact or intake/MAF assembly fault.","Compare cold-soak IAT with ambient temperature; inspect connector and test circuit to specifications."),
+"P0115":D("Engine Coolant Temperature Circuit","Coolant temperature sensor, wiring, connector or implausible coolant reading.","Check coolant level when cold; inspect connector; compare scan-tool temperature to actual engine temperature."),
+"P0120":D("Throttle / Pedal Position Sensor A Circuit","Throttle-position sensor, accelerator pedal sensor, wiring or throttle-body fault.","Check related codes and live pedal/throttle data; inspect wiring; perform relearn only if specified."),
+"P0128":D("Coolant Thermostat Below Regulating Temperature","Thermostat stuck open, coolant-temperature sensor bias or cooling-system issue.","Check warm-up temperature trend, thermostat operation and coolant sensor plausibility."),
+"P0130":D("O2 Sensor Circuit (Bank 1 Sensor 1)","Oxygen sensor, wiring, heater supply, exhaust leak or mixture problem.","Inspect wiring near exhaust; check heater supply and sensor activity; check for exhaust leaks."),
+"P0135":D("O2 Sensor Heater Circuit (Bank 1 Sensor 1)","Oxygen sensor heater, fuse, relay, wiring or connector fault.","Check heater fuse and supply; test heater resistance and control circuit using vehicle specifications."),
+"P0141":D("O2 Sensor Heater Circuit (Bank 1 Sensor 2)","Downstream oxygen-sensor heater, wiring, fuse or connector fault.","Inspect downstream sensor harness; check heater supply and circuit continuity to service data."),
+"P0171":D("System Too Lean (Bank 1)","Vacuum leak, intake leak, low fuel pressure, restricted injector or biased MAF sensor.","Smoke-test intake; inspect hoses; check fuel pressure and fuel trims; verify MAF readings."),
+"P0172":D("System Too Rich (Bank 1)","Leaking injector, excessive fuel pressure, biased MAF, purge fault or incorrect coolant reading.","Check fuel trims, fuel pressure, injector leakage, purge operation and coolant-temperature plausibility."),
+"P0201":D("Injector Circuit / Cylinder 1","Injector, wiring, connector, driver circuit or power supply fault.","Inspect connector and harness; test injector circuit using the manufacturer's procedure."),
+"P0202":D("Injector Circuit / Cylinder 2","Injector, wiring, connector, driver circuit or power supply fault.","Inspect connector and harness; test injector circuit using the manufacturer's procedure."),
+"P0203":D("Injector Circuit / Cylinder 3","Injector, wiring, connector, driver circuit or power supply fault.","Inspect connector and harness; test injector circuit using the manufacturer's procedure."),
+"P0204":D("Injector Circuit / Cylinder 4","Injector, wiring, connector, driver circuit or power supply fault.","Inspect connector and harness; test injector circuit using the manufacturer's procedure."),
+"P0220":D("Throttle / Pedal Position Sensor B Circuit","Throttle or pedal sensor, connector, wiring or reference-voltage fault.","Check live pedal/throttle data; inspect connector; test reference, ground and signal circuits."),
+"P0300":D("Random / Multiple Cylinder Misfire Detected","Ignition components, fuel delivery, vacuum leak, compression or timing problem.","Check freeze-frame data; inspect plugs and coils; check fuel trims, injector operation and compression as appropriate."),
+"P0301":D("Cylinder 1 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."),
+"P0302":D("Cylinder 2 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."),
+"P0303":D("Cylinder 3 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."),
+"P0304":D("Cylinder 4 Misfire Detected","Spark plug, ignition coil, injector, compression or cylinder-specific wiring fault.","Inspect plug and coil; check injector operation and compression."),
+"P0325":D("Knock Sensor 1 Circuit (Bank 1)","Knock sensor, harness, connector, mounting or engine mechanical noise.","Inspect harness and connector; verify sensor installation and compare signal with service data."),
+"P0335":D("Crankshaft Position Sensor A Circuit","Crankshaft sensor, wiring, connector, trigger wheel or sensor gap.","Inspect sensor and harness; check signal while cranking; verify trigger wheel and power/ground if applicable."),
+"P0340":D("Camshaft Position Sensor A Circuit","Camshaft sensor, wiring, connector, timing components or crank/cam correlation.","Inspect connector and harness; check sensor signal; compare cam/crank synchronisation and mechanical timing."),
+"P0351":D("Ignition Coil A Primary / Secondary Circuit","Ignition coil, coil wiring, connector, fuse or ECM driver circuit.","Inspect coil connector and harness; test power, ground and control signal using approved procedure."),
+"P0401":D("Exhaust Gas Recirculation Flow Insufficient","Blocked EGR passages, stuck EGR valve, control solenoid or pressure-sensor fault.","Inspect EGR passages and valve; compare commanded and actual EGR data."),
+"P0402":D("Exhaust Gas Recirculation Flow Excessive","EGR valve stuck open, control fault or incorrect sensor feedback.","Check EGR command and position; inspect valve and passages; verify sensor readings."),
+"P0410":D("Secondary Air Injection System Malfunction","Air pump, relay, fuse, valve, hose or control circuit fault.","Check cold-start operation, fuses, relay, hoses and commanded pump operation."),
+"P0420":D("Catalyst System Efficiency Below Threshold (Bank 1)","Exhaust leak, worn catalytic converter, oxygen-sensor issue, misfire or mixture fault.","Repair misfires and mixture faults first; inspect exhaust leaks; compare upstream/downstream sensor activity."),
+"P0442":D("EVAP System Small Leak Detected","Loose fuel cap, EVAP hose, purge valve, vent valve or canister leak.","Inspect cap and EVAP hoses; perform an approved smoke test."),
+"P0455":D("EVAP System Large Leak Detected","Fuel cap missing/loose, disconnected hose, vent valve or large EVAP leak.","Check fuel cap and filler neck; inspect EVAP lines and valves; smoke-test system."),
+"P0456":D("EVAP System Very Small Leak Detected","Small leak at cap, hose, seal, purge or vent valve.","Inspect cap seal and hoses; use an EVAP smoke tester and follow leak-test procedure."),
+"P0480":D("Cooling Fan 1 Control Circuit","Fan motor, relay, fuse, wiring or control circuit fault.","Check fan fuse and relay; command fan with a scan tool; inspect wiring and fan motor."),
+"P0500":D("Vehicle Speed Sensor A","Wheel/vehicle speed sensor, wiring, tone ring, connector or network fault.","Compare wheel-speed and vehicle-speed data; inspect sensor wiring and tone rings.","Chassis"),
+"P0505":D("Idle Control System Malfunction","Idle actuator, throttle body, air leak or wiring fault.","Inspect intake for leaks; check throttle/idle data; clean or relearn only as specified."),
+"P0560":D("System Voltage Malfunction","Battery, alternator, wiring, terminals or ground connection fault.","Test battery and charging system; inspect main power and ground connections."),
+"P0562":D("System Voltage Low","Weak battery, charging-system fault, poor terminals/grounds or high-resistance wiring.","Test battery condition and charging voltage; inspect terminals, grounds and alternator output."),
+"P0606":D("ECM / PCM Processor Fault","Controller internal fault, low voltage, poor grounds or network/power issue.","Check battery and charging health, ECM powers and grounds, and related communication codes before suspecting module failure."),
+"P0700":D("Transmission Control System Malfunction Request","Transmission controller has stored a fault; this code alone does not identify the failed part.","Scan the TCM separately with a capable tool; record its exact codes and freeze-frame data.","Transmission"),
+"P0715":D("Input / Turbine Speed Sensor A Circuit","Input-speed sensor, wiring, connector or internal transmission harness fault.","Check TCM codes and live input-speed data; inspect connector and harness.","Transmission"),
+"P0720":D("Output Speed Sensor Circuit","Output-speed sensor, wiring, connector or tone wheel fault.","Compare output-speed data with vehicle speed; inspect sensor circuit and tone wheel.","Transmission"),
+"P0730":D("Incorrect Gear Ratio","Low/incorrect fluid, internal clutch slip, hydraulic fault or speed-sensor error.","Check fluid level and condition using correct procedure; scan TCM; compare commanded and actual ratios.","Transmission"),
+"P0741":D("Torque Converter Clutch Performance / Stuck Off","Torque-converter clutch, solenoid, valve body, fluid condition or wiring fault.","Scan TCM; check fluid and temperature; compare commanded versus actual TCC slip.","Transmission"),
+"P0750":D("Shift Solenoid A Malfunction","Shift solenoid, valve body, wiring, connector or TCM control fault.","Check TCM-specific codes; inspect transmission connector; test solenoid circuit to specification.","Transmission"),
+"P0760":D("Shift Solenoid C Malfunction","Shift solenoid, valve body, wiring, connector or TCM control fault.","Check TCM-specific codes; inspect transmission connector; test solenoid circuit to specification.","Transmission"),
+"P0776":D("Pressure Control Solenoid B Performance / Stuck Off","Pressure-control solenoid, valve body, hydraulic pressure or wiring fault.","Check fluid condition and level; scan TCM live data; perform specified hydraulic and electrical tests.","Transmission"),
+"P0841":D("Transmission Fluid Pressure Sensor / Switch A Range / Performance","Pressure sensor, wiring, connector, fluid level or hydraulic fault.","Verify fluid level and temperature; inspect sensor circuit; compare pressure data with service specifications.","Transmission"),
+"P2002":D("Diesel Particulate Filter Efficiency Below Threshold (Bank 1)","DPF damage, soot/ash loading, exhaust leak or pressure/temperature sensor issue.","Read DPF differential pressure and soot estimates; inspect hoses and sensors; follow approved regeneration criteria."),
+"P2003":D("Diesel Particulate Filter Efficiency Below Threshold (Bank 2)","Where applicable: DPF damage, exhaust leak or pressure/temperature sensor issue.","Confirm engine configuration and code definition; check differential-pressure readings to service data."),
+"P2004":D("Intake Manifold Runner Control Stuck Open (Bank 1)","Runner flap, actuator, vacuum supply or linkage fault.","Inspect linkage and actuator; compare commanded and actual runner position."),
+"P2008":D("Intake Manifold Runner Control Circuit Open (Bank 1)","Actuator, wiring, connector or power supply fault.","Inspect actuator connector and wiring; test circuit and actuator command."),
+"P2015":D("Intake Manifold Runner Position Sensor Range / Performance","Runner position sensor, linkage wear, actuator or intake manifold fault.","Check live position data and linkage movement; use model-specific test limits."),
+"P2263":D("Turbocharger / Supercharger Boost System Performance","Boost leak, turbo actuator, vacuum control, sensor fault or exhaust restriction.","Inspect charge-air hoses and intercooler; compare requested/actual boost; test actuator and vacuum supply."),
+"P2452":D("Diesel Particulate Filter Pressure Sensor A Circuit","DPF pressure sensor, blocked/cracked hoses, wiring or connector fault.","Inspect pressure hoses for blockage/leaks; check sensor supply and signal; compare readings with engine off."),
+"P2463":D("Diesel Particulate Filter Soot Accumulation","High soot loading, failed regeneration, sensor fault or engine fault causing excess soot.","Read soot load and differential pressure; identify root cause; regenerate only if manufacturer conditions allow."),
+"P2503":D("Charging System Voltage Low","Alternator, battery, belt, wiring or ground fault.","Test battery and charging output under load; inspect belt and main connections."),
+"P2563":D("Turbocharger Boost Control Position Sensor Range / Performance","Turbo actuator position sensor, wiring, actuator sticking or vacuum problem.","Compare commanded and actual actuator position; inspect linkage and wiring."),
+"P2610":D("ECM / PCM Engine Off Timer Performance","Controller timer logic, power interruption or module fault.","Check battery voltage, module power/ground and related codes; follow OEM diagnostic flow."),
+"P2A00":D("O2 Sensor Circuit Range / Performance (Bank 1 Sensor 1)","Air/fuel sensor, exhaust leak, mixture fault or wiring issue.","Check fuel trims, exhaust leaks, sensor heater and live sensor response."),
+"U0100":D("Lost Communication With ECM / PCM A","CAN wiring, module power/ground, connector fault or failed module.","Check all module communication; test ECM fuses, grounds and network wiring using OEM procedure.","Network"),
+"U0101":D("Lost Communication With TCM","TCM power/ground, CAN wiring, connector or module fault.","Check TCM powers/grounds and network continuity; scan other modules for matching communication faults.","Network"),
+"U0121":D("Lost Communication With ABS Control Module","ABS module supply, ground, CAN wiring or connector fault.","Check ABS fuses and grounds; inspect network wiring; scan other modules for related U-codes.","Network"),
+"U0140":D("Lost Communication With Body Control Module","BCM power/ground, network wiring, connector or module fault.","Check BCM fuses and grounds; inspect network wiring and water ingress.","Network"),
+"U0155":D("Lost Communication With Instrument Panel Cluster","Cluster power/ground, CAN wiring, connector or module fault.","Check cluster supply and grounds; scan network and inspect connectors.","Network")
 };
-const SYSTEM_GUIDES = {
+const SYSTEM_GUIDES={
 "Engine / ECM / PCM":"Controls engine operation, fuel, ignition, emissions and sensor inputs. Check battery voltage, stored and pending codes, freeze-frame data, grounds, wiring and live sensor readings before replacing parts.",
 "Automatic transmission / TCM":"Controls automatic shifting and (where fitted) torque-converter operation. Retrieve TCM-specific codes, verify fluid level/condition using the correct procedure, and compare commanded gear, input/output speed and solenoid data. A manual gearbox may not have a separate TCM.",
 "ABS / stability control":"Monitors wheel speeds and controls anti-lock braking and stability functions. Check ABS-specific codes, wheel-speed live data, sensor wiring, tone rings, fuses and brake-fluid condition. Do not road-test with unsafe brakes.",
@@ -171,19 +194,22 @@ const SYSTEM_GUIDES = {
 "Hybrid / high-voltage battery":"Monitors hybrid battery, inverter and electric drive components. High-voltage systems can be lethal. Only trained technicians with the correct PPE and isolation procedure should work on HV components.",
 "EV drive / battery management":"Monitors high-voltage battery, inverter, motor and charging systems. Use EV-capable diagnostic equipment and manufacturer isolation procedures; never open or probe HV components without proper training.",
 "Instrument cluster":"Displays vehicle information and warnings and may communicate with multiple modules. Check network communication, supply voltage, grounds, configuration and related module codes.",
-"Immobiliser / key system":"Authorises starting and key recognition. Check key battery, spare key operation, antenna/reader, immobiliser codes and module communication. Security programming may require authorised procedures."
+"Immobiliser / key system":"Authorises starting and key recognition. Check key battery, spare key operation, antenna/reader, immobiliser codes and module communication. Security programming may require authorised procedures.",
+"Diesel particulate filter / emissions":"Monitors exhaust after-treatment, including DPF pressure and temperature. Check soot/ash estimates, pressure sensor hoses, exhaust leaks and root causes of excess soot. Do not force a regeneration unless the OEM safety and enabling conditions are met.",
+"Fuel system":"Supplies and meters fuel. Check fuel quality, pressure, pump command, injector balance and relevant sensor data using the correct high- or low-pressure safety procedure.",
+"Cooling system":"Maintains engine temperature. Check coolant level when cold, leaks, thermostat operation, fan command, sensor readings and pump operation. Never open a hot pressurised cooling system.",
+"Charging system":"Maintains battery charge and vehicle electrical supply. Test battery health, alternator output, belt, wiring, grounds and voltage drop under load.",
+"Network / CAN communication":"Allows modules to exchange data. Check module powers and grounds first, then inspect network wiring, connectors, termination and communication codes using the vehicle wiring diagram."
 };
-const makeEl=document.getElementById("make"), modelEl=document.getElementById("model"), yearEl=document.getElementById("year");
-function fillMakes(){makeEl.innerHTML=Object.keys(VEHICLES).sort().map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("")}
-function fillModels(){const models=VEHICLES[makeEl.value]||[];modelEl.innerHTML=models.map(m=>`<option>${escapeHtml(m)}</option>`).join("")}
-makeEl.addEventListener("change",fillModels);
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function showVehicle(){const make=makeEl.value,model=modelEl.value,year=yearEl.value,fuel=document.getElementById("fuel").value,engine=document.getElementById("engine").value.trim()||"Not specified",trans=document.getElementById("transmission").value;
-document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(year)} ${escapeHtml(make)} ${escapeHtml(model)}</h3><p><b>Fuel:</b> ${escapeHtml(fuel)}<br><b>Engine / motor:</b> ${escapeHtml(engine)}<br><b>Transmission:</b> ${escapeHtml(trans)}</p><p class="muted">Vehicle selected. Exact engine codes, module coverage and wiring information vary by market, model year and VIN and must be confirmed from manufacturer data.</p><span class="tag">${escapeHtml(make)}</span><span class="tag">${escapeHtml(fuel)}</span><span class="tag">${escapeHtml(trans)}</span>`}
-function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin."}
-function lookupCode(){let code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a valid-looking five-character OBD-II code, for example P0335.</p>";return}
-if(CODES[code]){const d=CODES[code];out.innerHTML=`<h3>${code} — ${escapeHtml(d[0])}</h3><h4>Possible causes</h4><p>${escapeHtml(d[1])}</p><h4>Recommended checks</h4><p>${escapeHtml(d[2])}<br><br><span class="muted">Confirm the exact definition and test procedure for the selected vehicle using manufacturer service information.</span></p>`}
-else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference list.</p><p><b>Recommended next steps:</b></p><ul><li>Confirm the code with a scan tool that supports the vehicle.</li><li>Record the module that reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Look up the exact manufacturer definition and test procedure for the vehicle's year, engine and market.</li></ul><p class="muted">Manufacturer-specific codes can have different meanings across makes and modules.</p>`}}
+const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
+function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("");document.getElementById("makeCount").textContent=makes.length;document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);document.getElementById("codeCount").textContent=Object.keys(CODES).length}
+function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("")}
+makeEl.addEventListener("change",fillModels);
+function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value,vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
+function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vin").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin."}
+function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p><p class="muted">This is a general reference. Confirm the exact code definition, affected module and test procedure for the selected make, model, year, engine and market.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
+function clearCode(){document.getElementById("dtc").value="";document.getElementById("codeResult").textContent="Enter a code to look it up."}
 function showSystem(){const s=document.getElementById("system").value;document.getElementById("systemResult").innerHTML=`<h3>${escapeHtml(s)}</h3><p>${escapeHtml(SYSTEM_GUIDES[s])}</p>`}
 function saveNotes(){try{localStorage.setItem("autodiagpro_notes",document.getElementById("notes").value);document.getElementById("notesResult").textContent="Notes saved in this browser on this device."}catch(e){document.getElementById("notesResult").textContent="This browser does not allow local note storage."}}
 function clearNotes(){document.getElementById("notes").value="";try{localStorage.removeItem("autodiagpro_notes")}catch(e){}document.getElementById("notesResult").textContent="Notes cleared."}
