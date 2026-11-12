@@ -67,10 +67,41 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Version 2026-11-12 • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
+<footer>AutoDiagPro • Version 2026-11-12 • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
+"Abarth":["500","595","695","124 Spider"],
+"Aston Martin":["DB11","DB12","DBX","Vantage","Vanquish"],
+"Bentley":["Bentayga","Continental GT","Flying Spur"],
+"Buick":["Encore","Envision","Enclave","LaCrosse"],
+"Cadillac":["CT4","CT5","Escalade","XT4","XT5","XT6","Lyriq"],
+"Chrysler":["300","Pacifica","Voyager"],
+"Cupra":["Ateca","Born","Formentor","Leon","Terramar"],
+"Daihatsu":["Charade","Cuore / Mira","Terios","Sirion","Gran Max"],
+"Ferrari":["296 GTB","488","812 Superfast","F8 Tributo","Roma","SF90 Stradale"],
+"GMC":["Acadia","Canyon","Sierra","Terrain","Yukon","Hummer EV"],
+"Hino":["300 Series","500 Series","700 Series"],
+"Infiniti":["Q30","Q50","QX50","QX55","QX60","QX80"],
+"Iveco":["Daily","Eurocargo","S-Way"],
+"KGM / SsangYong":["Korando","Musso","Rexton","Tivoli","Torres"],
+"Lada":["Granta","Niva","Vesta","XRAY"],
+"Lamborghini":["Aventador","Huracán","Revuelto","Urus"],
+"Lincoln":["Aviator","Corsair","Nautilus","Navigator"],
+"Lotus":["Emira","Eletre","Evija","Emeya"],
+"Lucid":["Air","Gravity"],
+"Maserati":["Ghibli","Grecale","GranTurismo","Levante","Quattroporte"],
+"McLaren":["540C","570S","720S","750S","Artura","GT"],
+"Polestar":["Polestar 2","Polestar 3","Polestar 4"],
+"Pontiac":["G3","G5","G6","Grand Prix","Vibe"],
+"Proton":["Saga","Persona","Iriz","X50","X70","X90"],
+"Ram":["1500","2500","3500","ProMaster"],
+"Rivian":["R1S","R1T","EDV"],
+"Rolls-Royce":["Cullinan","Ghost","Phantom","Spectre","Wraith"],
+"Saab":["9-3","9-5","900"],
+"SEAT":["Ibiza","Leon","Arona","Ateca","Tarraco"],
+"Škoda":["Fabia","Kamiq","Karoq","Kodiaq","Octavia","Scala","Superb","Enyaq"],
+"VinFast":["VF 6","VF 7","VF 8","VF 9"],
 "Acura":["ILX","Integra","MDX","RDX","TLX"],
 "Alfa Romeo":["Giulia","Stelvio","Tonale","Giulietta"],
 "Audi":["A1","A3","A4","A5","A6","A7","A8","Q2","Q3","Q5","Q7","Q8","TT","e-tron"],
@@ -352,7 +383,7 @@ const makeEl=document.getElementById("make"),modelEl=document.getElementById("mo
 function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("");document.getElementById("makeCount").textContent=makes.length;document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);document.getElementById("codeCount").textContent=Object.keys(CODES).length}
 function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("")}
 makeEl.addEventListener("change",fillModels);
-function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value,vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
+function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value,vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. The worldwide list is an expanding reference, not a complete factory catalogue. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
 function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vin").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin."}
 function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){const selectedMake=makeEl.value;const makerNote=(MAKER_NOTES[selectedMake]||{})[code];out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p>${makerNote?`<h4>${escapeHtml(selectedMake)}-specific diagnostic focus</h4><p>${escapeHtml(makerNote)}</p>`:`<h4>Manufacturer-specific information</h4><p>Selected make: ${escapeHtml(selectedMake)}. No separate make-specific note is loaded for this code yet. Confirm the exact manufacturer definition, ECU/TCM identity, wiring diagram and test values for this vehicle.</p>`}<p class="muted">This is a workshop reference, not an OEM repair procedure. Confirm exact engine, gearbox, model year, market and module before testing or replacing parts.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
 function clearCode(){document.getElementById("dtc").value="";document.getElementById("codeResult").textContent="Enter a code to look it up."}
