@@ -51,7 +51,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 <div><label for="powertrainTransmission">Gearbox type</label><select id="powertrainTransmission"><option value="">Select an engine example</option></select></div>
 </div>
 <div class="actions"><button onclick="loadPowertrainReference()">Load engine & gearbox options</button><button class="secondary" onclick="showPowertrainDetails()">Show details</button></div>
-<div class="result" id="powertrainResult" aria-live="polite">Select a vehicle make and model above, then load the reference options.</div>
+<div class="result" id="powertrainResult" aria-live="polite">Select a vehicle make, model and year above. Matching reference options load automatically.</div>
 </section>
 
 <section class="card">
@@ -154,7 +154,7 @@ const VEHICLES={
 "Tata":["Tiago","Tigor","Altroz","Punch","Nexon","Harrier","Safari"],
 "Tesla":["Model 3","Model S","Model X","Model Y","Cybertruck"],
 "Toyota":["Agya","Auris","Avanza","Camry","Corolla","Corolla Cross","Fortuner","GR86","Hilux","Innova","Land Cruiser","Prado","RAV4","Starlet","Urban Cruiser","Vitz / Yaris"],
-"Volkswagen":["Polo","Golf","Jetta","Passat","T-Cross","T-Roc","Tiguan","Touareg","Amarok","Caddy","Transporter","ID.3","ID.4"],
+"Volkswagen":["Polo","Golf","Golf GTI","Golf R","Jetta","Passat","T-Cross","T-Roc","Tiguan","Touareg","Amarok","Caddy","Transporter","ID.3","ID.4"],
 "Volvo":["S60","S90","V60","XC40","XC60","XC90","EX30","EX90"]
 };
 const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
@@ -430,6 +430,12 @@ const POWERTRAIN_DB={
  {engine:"1.5L TSI petrol",fuel:"Petrol",gearboxes:["6-speed manual","7-speed DSG"],note:"Later-generation selected markets."},
  {engine:"2.0L TDI diesel",fuel:"Diesel",gearboxes:["6-speed manual","6- or 7-speed DSG"],note:"Gearbox family varies by torque and year."}
 ],
+"Volkswagen|Golf GTI":[
+ {engine:"2.0L TSI turbo petrol (GTI generations; engine code varies)",fuel:"Petrol",gearboxes:["6-speed DSG automatic","7-speed DSG automatic"],years:[2005,2035],note:"GTI DSG gearbox type varies by generation, engine torque and market. Confirm the gearbox code by VIN."}
+],
+"Volkswagen|Golf R":[
+ {engine:"2.0L TSI turbo petrol (Golf R generations; engine code varies)",fuel:"Petrol",gearboxes:["6-speed DSG automatic","7-speed DSG automatic"],years:[2010,2035],note:"Golf R DSG type varies by generation and market. Confirm the exact gearbox code and drivetrain by VIN."}
+],
 "Ford|Ranger":[
  {engine:"2.0L EcoBlue single-turbo diesel",fuel:"Diesel",gearboxes:["6-speed manual","10-speed automatic (selected versions)"],note:"Check generation and exact gearbox code."},
  {engine:"2.0L EcoBlue bi-turbo diesel",fuel:"Diesel",gearboxes:["10-speed automatic (common pairing)"],note:"Market and model-year dependent."},
@@ -543,10 +549,21 @@ function showPowertrainDetails(){
 }
 document.getElementById("powertrainEngine").addEventListener("change",updatePowertrainGearboxes);
 function onVehicleSelectionChanged(){
- document.getElementById("powertrainResult").textContent="Vehicle selection changed. Load the year-matched engine and gearbox options.";
- document.getElementById("powertrainEngine").innerHTML='<option value="">Load a vehicle first</option>';
- document.getElementById("powertrainTransmission").innerHTML='<option value="">Select an engine example</option>';
- updateVehicleTransmission();
+ // Keep the worldwide make/model/year selectors untouched. Refresh only the
+ // powertrain and transmission controls whenever the selected vehicle changes.
+ const hasVehicle=Boolean(makeEl.value && modelEl.value && yearEl.value);
+ const engineSelect=document.getElementById("powertrainEngine");
+ const gearboxSelect=document.getElementById("powertrainTransmission");
+ if(!hasVehicle){
+   engineSelect.innerHTML='<option value="">Select make, model and year first</option>';
+   gearboxSelect.innerHTML='<option value="">Select an engine example</option>';
+   document.getElementById("powertrainResult").textContent="Select a vehicle make, model and year.";
+   updateVehicleTransmission();
+   return;
+ }
+ // Automatically populate matching engine/gearbox examples; no separate
+ // Load button is required after changing the vehicle or model year.
+ loadPowertrainReference();
 }
 makeEl.addEventListener("change",()=>{fillModels();onVehicleSelectionChanged();});
 modelEl.addEventListener("change",onVehicleSelectionChanged);
