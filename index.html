@@ -22,7 +22,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </style>
 </head>
 <body>
-<header><h1>Auto<span>Diag</span>Pro</h1><p>Worldwide vehicle selection • OBD-II fault-code reference • Diagnostic system guide</p></header>
+<header><h1>Auto<span>Diag</span>Pro</h1><p>Worldwide vehicle selection • Automatic model-year list • OBD-II fault-code reference • Diagnostic system guide</p></header>
 <main>
 <div class="notice"><strong>Workshop note:</strong> AutoDiagPro is a diagnostic reference tool. It does not yet connect to or scan a vehicle. Live scanning requires a compatible OBD-II adapter, supported device connection, and vehicle-specific protocol and data support. Always verify procedures against manufacturer service information.</div>
 <div class="grid">
@@ -78,7 +78,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Version 2026-11-14 • Engine and gearbox reference added • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
+<footer>AutoDiagPro • Version 2026-11-14 • Automatic vehicle option loading added • Engine and gearbox reference added • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
@@ -512,13 +512,36 @@ function showPowertrainDetails(){
  out.innerHTML=`<h3>${escapeHtml(makeEl.value)} ${escapeHtml(modelEl.value)} — powertrain example</h3><p><b>Engine:</b> ${escapeHtml(row.engine)}<br><b>Fuel:</b> ${escapeHtml(row.fuel)}<br><b>Gearbox:</b> ${escapeHtml(selected)}</p><p>${escapeHtml(row.note)}</p>${manual?'<p><b>Manual gearbox note:</b> A conventional manual gearbox normally has no separate automatic-transmission control module or shift-solenoid system. Some vehicles still have electronic clutch, gear-position or transmission-related sensors; confirm the exact design.</p>':''}${automatic?'<p><b>Automatic gearbox note:</b> The vehicle may have a TCM or integrated transmission control. Scan the correct transmission module and identify the exact gearbox code before electrical or hydraulic tests.</p>':''}<p class="muted">This is an indicative application reference, not a VIN-decoded factory build sheet. Do not order parts or perform repairs from this entry alone.</p>`;
 }
 document.getElementById("powertrainEngine").addEventListener("change",updatePowertrainGearboxes);
-makeEl.addEventListener("change",()=>{document.getElementById("powertrainResult").textContent="Vehicle changed. Load the engine and gearbox options again.";});
-modelEl.addEventListener("change",()=>{document.getElementById("powertrainResult").textContent="Vehicle changed. Load the engine and gearbox options again.";});
+function refreshVehicleOptions(){
+  fillYears();
+  loadPowertrainReference();
+  document.getElementById("vehicleResult").textContent="Vehicle selection updated. Choose the year shown and confirm the exact engine and gearbox for this vehicle.";
+}
+makeEl.addEventListener("change",()=>{fillModels();refreshVehicleOptions();});
+modelEl.addEventListener("change",refreshVehicleOptions);
+yearEl.addEventListener("change",()=>{
+  const out=document.getElementById("powertrainResult");
+  if(out.textContent) out.innerHTML += '<p class="muted">Selected model year: '+escapeHtml(yearEl.value)+'. The listed engine examples are not yet filtered by year; verify the exact VIN and engine/gearbox codes.</p>';
+});
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("");document.getElementById("makeCount").textContent=makes.length;document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);document.getElementById("codeCount").textContent=Object.keys(CODES).length}
-function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("")}
-makeEl.addEventListener("change",fillModels);
+function fillMakes(){
+ const makes=Object.keys(VEHICLES).sort();
+ makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");
+ fillModels();fillYears();
+ document.getElementById("makeCount").textContent=makes.length;
+ document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);
+ document.getElementById("codeCount").textContent=Object.keys(CODES).length;
+}
+function fillModels(){
+ modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("");
+}
+function fillYears(){
+ const now=new Date().getFullYear();
+ yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option value="${now-i}">${now-i}</option>`).join("");
+ yearEl.value=String(now);
+}
+
 function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value,vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. The worldwide list is an expanding reference, not a complete factory catalogue. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
 function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vin").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin."}
 function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){const selectedMake=makeEl.value;const makerNote=(MAKER_NOTES[selectedMake]||{})[code];out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p>${makerNote?`<h4>${escapeHtml(selectedMake)}-specific diagnostic focus</h4><p>${escapeHtml(makerNote)}</p>`:`<h4>Manufacturer-specific information</h4><p>Selected make: ${escapeHtml(selectedMake)}. No separate make-specific note is loaded for this code yet. Confirm the exact manufacturer definition, ECU/TCM identity, wiring diagram and test values for this vehicle.</p>`}<p class="muted">This is a workshop reference, not an OEM repair procedure. Confirm exact engine, gearbox, model year, market and module before testing or replacing parts.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
