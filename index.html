@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
 <title>AutoDiagPro | Worldwide Vehicle Diagnostics</title>
-<meta name="version" content="2026-11-12-P0016-fix">
+<meta name="version" content="2026-11-14-vehicle-selector-startup-fix">
 <style>
 :root{--bg:#0b1220;--panel:#141f30;--panel2:#1b2a40;--line:#2b3b52;--text:#edf4ff;--muted:#a9b8cc;--accent:#36c5a1;--warn:#ffc66d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101c2d 55%,#0b1220);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
@@ -78,7 +78,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Version 2026-11-12 • Engine and gearbox reference added • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
+<footer>AutoDiagPro • Version 2026-11-14 • Engine and gearbox reference added • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
@@ -157,6 +157,7 @@ const VEHICLES={
 "Volkswagen":["Polo","Golf","Jetta","Passat","T-Cross","T-Roc","Tiguan","Touareg","Amarok","Caddy","Transporter","ID.3","ID.4"],
 "Volvo":["S60","S90","V60","XC40","XC60","XC90","EX30","EX90"]
 };
+const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
 const D=(description,causes,checks,system="Powertrain")=>({description,causes,checks,system});
 const CODES={
 "P0016":D("Crankshaft / Camshaft Position Correlation (Bank 1 Sensor A)","Possible causes include incorrect mechanical timing, a stretched timing chain or belt, a damaged reluctor/tone wheel, or a crankshaft/camshaft sensor signal or wiring fault.","Check freeze-frame data and related crank/cam sensor codes; inspect sensor connectors and wiring; compare live cam/crank synchronisation; verify mechanical timing using the exact engine-specific manufacturer procedure before replacing parts."),
@@ -515,7 +516,6 @@ makeEl.addEventListener("change",()=>{document.getElementById("powertrainResult"
 modelEl.addEventListener("change",()=>{document.getElementById("powertrainResult").textContent="Vehicle changed. Load the engine and gearbox options again.";});
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-const makeEl=document.getElementById("make"),modelEl=document.getElementById("model"),yearEl=document.getElementById("year");
 function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=makes.map(m=>`<option>${escapeHtml(m)}</option>`).join("");fillModels();const now=new Date().getFullYear();yearEl.innerHTML=Array.from({length:now-1980+1},(_,i)=>`<option>${now-i}</option>`).join("");document.getElementById("makeCount").textContent=makes.length;document.getElementById("modelCount").textContent=Object.values(VEHICLES).reduce((n,a)=>n+a.length,0);document.getElementById("codeCount").textContent=Object.keys(CODES).length}
 function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("")}
 makeEl.addEventListener("change",fillModels);
@@ -527,7 +527,29 @@ function showSystem(){const s=document.getElementById("system").value;document.g
 function saveNotes(){try{localStorage.setItem("autodiagpro_notes",document.getElementById("notes").value);document.getElementById("notesResult").textContent="Notes saved in this browser on this device."}catch(e){document.getElementById("notesResult").textContent="This browser does not allow local note storage."}}
 function clearNotes(){document.getElementById("notes").value="";try{localStorage.removeItem("autodiagpro_notes")}catch(e){}document.getElementById("notesResult").textContent="Notes cleared."}
 try{document.getElementById("notes").value=localStorage.getItem("autodiagpro_notes")||""}catch(e){}
-fillMakes();
+
+// Reliable startup: populate the vehicle selectors after the page DOM is ready.
+function bootVehicleSelectors(){
+  try{
+    makeEl.disabled=false;
+    modelEl.disabled=false;
+    fillMakes();
+    if(!makeEl.options.length || !modelEl.options.length){
+      throw new Error("Vehicle list did not populate");
+    }
+    document.getElementById("vehicleResult").textContent="Vehicle database loaded. Choose a make and model to begin.";
+  }catch(error){
+    document.getElementById("makeCount").textContent="!";
+    document.getElementById("modelCount").textContent="!";
+    document.getElementById("vehicleResult").textContent="Vehicle selector startup error: "+error.message+". Reload this page. If this message remains, check the browser console.";
+    console.error("AutoDiagPro vehicle selector startup failed:",error);
+  }
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",bootVehicleSelectors,{once:true});
+}else{
+  bootVehicleSelectors();
+}
 </script>
 </body>
 </html>
