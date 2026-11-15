@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<!-- AutoDiagPro complete replacement build | automatic transmissions only | 2026-11-14 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
 <title>AutoDiagPro | Worldwide Vehicle Diagnostics</title>
-<meta name="version" content="2026-11-14-automatic-transmission-filter-v2">
+<meta name="version" content="2026-11-15-gearbox-filter-and-diagnostics-review-v5">
 <style>
 :root{--bg:#0b1220;--panel:#141f30;--panel2:#1b2a40;--line:#2b3b52;--text:#edf4ff;--muted:#a9b8cc;--accent:#36c5a1;--warn:#ffc66d}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101c2d 55%,#0b1220);color:var(--text);font:16px/1.5 system-ui,Arial,sans-serif}
@@ -36,7 +35,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 <div><label for="market">Market / region</label><select id="market"><option>South Africa</option><option>Europe</option><option>North America</option><option>South America</option><option>Asia</option><option>Middle East</option><option>Australia / New Zealand</option><option>Other / unknown</option></select></div>
 <div><label for="fuel">Fuel / power type</label><select id="fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Plug-in Hybrid</option><option>Electric</option><option>LPG</option><option>CNG</option></select></div>
 <div><label for="engine">Engine / motor</label><input id="engine" placeholder="e.g. 1.6 petrol, 2.0 TDI, 150 kW EV"></div>
-<div><label for="transmission">Automatic transmission only (filtered by vehicle, year and engine)</label><select id="transmission"><option value="">Select make, model and year first</option></select></div>
+<div><label for="transmission">Automatic transmission (filtered by vehicle)</label><select id="transmission"><option value="">Select make, model and year first</option></select></div>
 <div><label for="vin">VIN (optional; do not share publicly)</label><input id="vin" maxlength="17" placeholder="17-character VIN, if known"></div>
 </div>
 <div class="actions"><button onclick="showVehicle()">Show vehicle details</button><button class="secondary" onclick="resetVehicle()">Reset vehicle</button></div>
@@ -79,7 +78,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:0 15px 25px}
 </section>
 </div>
 </main>
-<footer>AutoDiagPro • Version 2026-11-14 • Automatic gearbox filtering by make/model/year • Expanded worldwide make/model coverage • Expanded generic OBD-II and selected make-specific diagnostic notes • Always verify against OEM service information.</footer>
+<footer>AutoDiagPro • Version 2026-11-15 • Manual and four-speed options excluded from gearbox selectors • Automatic fitments shown only where reference data is loaded • Generic OBD-II and selected manufacturer-specific diagnostic notes • Not a live scanner or complete OEM database • Verify every vehicle against VIN and manufacturer service information.</footer>
 <script>
 "use strict";
 const VEHICLES={
@@ -298,6 +297,8 @@ const MAKER_NOTES={
 "P2002":"Toyota-specific focus: confirm whether the selected diesel model is equipped with a DPF and which after-treatment layout it uses. Check differential-pressure sensor hoses, temperature sensors and soot/ash data before any regeneration."
 },
 "Volkswagen":{
+"P0016":"VW-specific focus: identify the exact engine code and ECU. Compare crankshaft and camshaft synchronisation in live data; inspect the G28 crankshaft-speed sensor and camshaft-position sensor circuits, connectors and wiring. Check for related timing or sensor codes, then verify mechanical timing using the correct engine-specific VW procedure. Do not replace a sensor or adjust timing from P0016 alone.",
+"P0016_AMAROK":"VW Amarok-specific focus: first identify the exact engine code and ECU. Compare crankshaft and camshaft synchronisation in live data; inspect the G28 crankshaft-speed sensor and camshaft-position sensor circuits, connectors and wiring. Check for related timing or sensor codes, then verify mechanical timing using the correct engine-specific VW procedure. Do not replace a sensor or adjust timing from P0016 alone.",
 "P0335":"VW-specific focus: verify the engine code and the G28 engine-speed sensor circuit. Check connector/harness condition and crank/cam synchronisation using the correct ECU measuring values.",
 "P0700":"VW-specific focus: interrogate the transmission controller (commonly address 02 on many VAG tools) and save its own fault codes. Transmission type and controller differ by gearbox code.",
 "P0420":"VW-specific focus: identify engine code and catalyst monitoring strategy; check exhaust leaks, misfire history, fuel trims and lambda sensor data before catalyst diagnosis."
@@ -487,12 +488,24 @@ const POWERTRAIN_DB={
  {engine:"2.2L Skyactiv-D diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed automatic"],note:"Selected older markets."}
 ],
 "Renault|Kwid":[
- {engine:"1.0L SCe petrol (market and year dependent)",fuel:"Petrol",gearboxes:["5-speed AMT automatic"],years:[2016,2035],note:"Kwid AMT is an automated-manual transmission marketed as an automatic. Availability and gearbox calibration vary by market and model year; confirm the exact gearbox code by VIN."}
+ {engine:"1.0L SCe petrol",fuel:"Petrol",gearboxes:["5-speed AMT automatic (selected markets and model years)"],note:"Kwid AMT is an automated-manual transmission, not a conventional torque-converter automatic. Not every Kwid is automatic; confirm the AMT selector, VIN and local-market specification."}
+],
+"Renault|Clio":[
+ {engine:"0.9L / 1.0L TCe petrol",fuel:"Petrol",gearboxes:["6-speed EDC dual-clutch automatic (selected generations/markets)"],note:"EDC availability depends on generation, engine and market. Older 4-speed automatic versions are intentionally not listed."},
+ {engine:"1.2L / 1.3L TCe petrol",fuel:"Petrol",gearboxes:["6- or 7-speed EDC dual-clutch automatic (selected versions)"],note:"Confirm the exact generation, engine code and EDC gearbox code by VIN."}
+],
+"Renault|Megane":[
+ {engine:"1.2L / 1.3L TCe petrol",fuel:"Petrol",gearboxes:["6- or 7-speed EDC dual-clutch automatic (selected versions)"],note:"Transmission varies by generation, engine output and market; verify by VIN."},
+ {engine:"1.5L dCi diesel",fuel:"Diesel",gearboxes:["6-speed EDC dual-clutch automatic (selected versions)"],note:"Selected diesel variants only; confirm gearbox code and market."}
+],
+"Renault|Captur":[
+ {engine:"0.9L / 1.0L TCe petrol",fuel:"Petrol",gearboxes:["6-speed EDC dual-clutch automatic (selected versions)"],note:"Automatic availability depends on model year and market. Verify exact engine and gearbox code."},
+ {engine:"1.3L TCe petrol",fuel:"Petrol",gearboxes:["7-speed EDC dual-clutch automatic (selected versions)"],note:"Selected later-generation variants; confirm VIN and local specification."}
 ],
 "Renault|Duster":[
- {engine:"1.6L SCe petrol",fuel:"Petrol",gearboxes:["5-speed manual","CVT (selected markets)"],note:"Generation and region dependent."},
- {engine:"1.5L dCi diesel",fuel:"Diesel",gearboxes:["6-speed manual","6-speed EDC (selected versions)"],note:"EDC is a dual-clutch transmission."},
- {engine:"1.3L TCe petrol",fuel:"Petrol",gearboxes:["6-speed manual","CVT / EDC (market dependent)"],note:"Confirm exact generation and gearbox."}
+ {engine:"1.6L SCe petrol",fuel:"Petrol",gearboxes:["CVT automatic (selected markets)"],note:"Generation and region dependent. Older manual versions are not shown in the automatic selector."},
+ {engine:"1.5L dCi diesel",fuel:"Diesel",gearboxes:["6-speed EDC dual-clutch automatic (selected versions)"],note:"EDC is a dual-clutch transmission; selected versions only."},
+ {engine:"1.3L TCe petrol",fuel:"Petrol",gearboxes:["CVT / EDC automatic (market and generation dependent)"],note:"Confirm exact generation, engine and gearbox code by VIN."}
 ],
 "Chery|Tiggo 7":[
  {engine:"1.5L turbo petrol",fuel:"Petrol",gearboxes:["CVT","6-speed DCT (variant dependent)"],note:"Chery powertrain combinations vary by market and model year."},
@@ -512,15 +525,17 @@ function getAutomaticGearboxLabels(row){
  if(!row) return [];
  return row.gearboxes.filter(g=>{
    const t=g.toLowerCase();
-   if(/manual|4\s*(?:-|to|or|\/)?\s*5?\s*-?speed|four[- ]speed/.test(t)) return false;
-   return /automatic|\bcvt\b|dct|dsg|edc|e-cvt|ecvt|dht|\bamt\b|single[- ]speed|electric drive|direct shift/.test(t) && !/manual/.test(t);
+   // Keep the selector automatic-only. Reject manual entries and any label
+   // that mentions a four-speed option, including mixed ranges such as
+   // "4- or 5-speed automatic". AMT is accepted as an automatic selection.
+   const hasFourSpeed = /\bfour\s*-?\s*speed\b|\b4\s*-?\s*speed\b|\b4\s*[-/]\s*or\s*5\s*-?\s*speed\b|\b4\s*to\s*5\s*-?\s*speed\b/.test(t);
+   if(/\bmanual\b/.test(t) || hasFourSpeed) return false;
+   return /automatic|\bcvt\b|dct|dsg|edc|e-cvt|ecvt|dht|\bamt\b|single[- ]speed|electric drive|direct shift/.test(t);
  });
 }
 function getApplicablePowertrainRows(){
  const key=makeEl.value+"|"+modelEl.value, rows=POWERTRAIN_DB[key]||[], year=Number(yearEl.value);
- // Automatic-only catalogue: hide manual-only engine entries and keep only
- // year-matched engines with a supported automatic / CVT / DSG / DCT / AMT option.
- return rows.filter(r=>(!r.years || (year>=r.years[0] && year<=r.years[1])) && getAutomaticGearboxLabels(r).length>0);
+ return rows.filter(r=>!r.years || (year>=r.years[0] && year<=r.years[1]));
 }
 function updateVehicleTransmission(){
  const select=document.getElementById("transmission"), rows=getApplicablePowertrainRows();
@@ -533,7 +548,6 @@ function updateVehicleTransmission(){
    return;
  }
  select.innerHTML='<option value="">Select applicable automatic gearbox</option>'+choices.map((x,i)=>`<option value="${escapeHtml(x.label)}">${escapeHtml(x.label)} — ${escapeHtml(x.engine)}</option>`).join("");
- select.selectedIndex=0;
 }
 function loadPowertrainReference(){
  const rows=getApplicablePowertrainRows();
@@ -582,7 +596,7 @@ function fillMakes(){const makes=Object.keys(VEHICLES).sort();makeEl.innerHTML=m
 function fillModels(){modelEl.innerHTML=(VEHICLES[makeEl.value]||[]).map(m=>`<option>${escapeHtml(m)}</option>`).join("");}
 function showVehicle(){const vals={make:makeEl.value,model:modelEl.value,year:yearEl.value,market:document.getElementById("market").value,fuel:document.getElementById("fuel").value,engine:document.getElementById("engine").value.trim()||"Not specified",trans:document.getElementById("transmission").value||"Not listed / needs VIN confirmation",vin:document.getElementById("vin").value.trim().toUpperCase()};document.getElementById("vehicleResult").innerHTML=`<h3>${escapeHtml(vals.year)} ${escapeHtml(vals.make)} ${escapeHtml(vals.model)}</h3><p><b>Market:</b> ${escapeHtml(vals.market)}<br><b>Fuel:</b> ${escapeHtml(vals.fuel)}<br><b>Engine / motor:</b> ${escapeHtml(vals.engine)}<br><b>Transmission:</b> ${escapeHtml(vals.trans)}${vals.vin?`<br><b>VIN entered:</b> ${escapeHtml(vals.vin)}`:""}</p><p class="muted">Selection recorded for this session. The worldwide list is an expanding reference, not a complete factory catalogue. Confirm exact engine code, gearbox, ECU and market using the VIN and manufacturer data. A model name alone cannot guarantee component or code compatibility.</p><span class="tag">${escapeHtml(vals.make)}</span><span class="tag">${escapeHtml(vals.fuel)}</span><span class="tag">${escapeHtml(vals.trans)}</span>`}
 function resetVehicle(){document.getElementById("engine").value="";document.getElementById("vin").value="";document.getElementById("vehicleResult").textContent="Choose a make and model to begin.";updateVehicleTransmission();}
-function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){const selectedMake=makeEl.value;const makerNote=(MAKER_NOTES[selectedMake]||{})[code];out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p>${makerNote?`<h4>${escapeHtml(selectedMake)}-specific diagnostic focus</h4><p>${escapeHtml(makerNote)}</p>`:`<h4>Manufacturer-specific information</h4><p>Selected make: ${escapeHtml(selectedMake)}. No separate make-specific note is loaded for this code yet. Confirm the exact manufacturer definition, ECU/TCM identity, wiring diagram and test values for this vehicle.</p>`}<p class="muted">This is a workshop reference, not an OEM repair procedure. Confirm exact engine, gearbox, model year, market and module before testing or replacing parts.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
+function lookupCode(){const code=document.getElementById("dtc").value.trim().toUpperCase().replace(/\s/g,"");const out=document.getElementById("codeResult");if(!/^[PBCU][0-9A-F][0-9A-F0-9]{3}$/.test(code)){out.innerHTML="<p>Please enter a five-character OBD-II code, for example P0335.</p>";return}const item=CODES[code];if(item){const selectedMake=makeEl.value;const makerNotes=MAKER_NOTES[selectedMake]||{};const makerNote=(selectedMake==="Volkswagen"&&modelEl.value==="Amarok"&&code==="P0016"?makerNotes.P0016_AMAROK:"")||makerNotes[code]||"";out.innerHTML=`<h3>${code} — ${escapeHtml(item.description)}</h3><span class="tag">${escapeHtml(item.system)}</span><h4>Possible causes</h4><p>${escapeHtml(item.causes)}</p><h4>Recommended checks</h4><p>${escapeHtml(item.checks)}</p>${makerNote?`<h4>${escapeHtml(selectedMake)}-specific diagnostic focus</h4><p>${escapeHtml(makerNote)}</p>`:`<h4>Manufacturer-specific information</h4><p>Selected make: ${escapeHtml(selectedMake)}. No separate make-specific note is loaded for this code yet. Confirm the exact manufacturer definition, ECU/TCM identity, wiring diagram and test values for this vehicle.</p>`}<p class="muted">This is a workshop reference, not an OEM repair procedure. Confirm exact engine, gearbox, model year, market and module before testing or replacing parts.</p>`}else{const family={P:"Powertrain (engine / transmission)",B:"Body",C:"Chassis",U:"Network / communication"}[code[0]];out.innerHTML=`<h3>${code} — ${family} code</h3><p>This code is not yet in the built-in reference database.</p><h4>Recommended next steps</h4><ul><li>Confirm the code with a scan tool that supports this vehicle.</li><li>Record which module reported it and any accompanying codes.</li><li>Save freeze-frame data before clearing codes.</li><li>Find the exact manufacturer definition and test procedure for this vehicle.</li></ul><p class="muted">Manufacturer-specific codes can differ between makes, models and modules. Do not replace a part based on a code alone.</p>`}}
 function clearCode(){document.getElementById("dtc").value="";document.getElementById("codeResult").textContent="Enter a code to look it up."}
 function showSystem(){const s=document.getElementById("system").value;document.getElementById("systemResult").innerHTML=`<h3>${escapeHtml(s)}</h3><p>${escapeHtml(SYSTEM_GUIDES[s])}</p>`}
 function saveNotes(){try{localStorage.setItem("autodiagpro_notes",document.getElementById("notes").value);document.getElementById("notesResult").textContent="Notes saved in this browser on this device."}catch(e){document.getElementById("notesResult").textContent="This browser does not allow local note storage."}}
